@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 # from flask_migrate import Migrate
@@ -12,8 +12,3 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
