@@ -1,17 +1,15 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from .config import Config
-# from flask_migrate import Migrate
+import os
 
+# from flask_migrate import Migrate
+project_dir = os.path.dirname(os.path.abspath(__file__))
+database_file = "sqlite:///{}".format(os.path.join(project_dir, "starburst.db"))
 
 app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy()
+app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
-db.init_app(app)
-
-with app.app_context():
-    db.create_all()
+db = SQLAlchemy(app)
 
 
 @app.route('/')
