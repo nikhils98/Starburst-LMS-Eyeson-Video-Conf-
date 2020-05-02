@@ -1,28 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS Login</title>
-    <link rel="stylesheet" href="../static/vendors/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/styles.css">
-</head>
+{% block head %}
+<title>LMS Login</title>
+{% endblock %}
 
-<body class="d-flex justify-content-center align-items-center">
-        <form class="text-center w-25">
-            <div class="form-group">
-                <input type="email" class="form-control" placeholder="Email" id="email-input">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" id="password-input">
-            </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="rememeber-me-checkbox">
-                <label class="form-check-label" for="rememeber-me-checkbox">Remember Me</label>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-        </form>
-</body>
-
-</html>
+{% block body %}
+<div class="h-100 d-flex justify-content-center align-items-center">
+    <form class="text-center w-25">
+        <div class="form-group">
+            <input type="email" class="form-control" placeholder="Email" id="email-input">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" id="password-input">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="rememeber-me-checkbox">
+            <label class="form-check-label" for="rememeber-me-checkbox">Remember Me</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+</div>
+{% endblock %}
