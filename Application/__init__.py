@@ -6,11 +6,14 @@ import os
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "starburst.db"))
 
+print(database_file)
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 db = SQLAlchemy(app)
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+
+from . import models, views, login
+
+db.create_all()
