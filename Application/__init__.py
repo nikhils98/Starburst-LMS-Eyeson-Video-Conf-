@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
+import Application.views
+
 
 # from flask_migrate import Migrate
 project_dir = os.path.dirname(os.path.abspath(__file__))
