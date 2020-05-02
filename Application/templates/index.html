@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap.min.css') }}">
-    <link rel="javascript" href="{{ url_for('static', filename='vendors/bootstrap.min.js') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
+{% block head %}
+<title>LMS Login</title>
+{% endblock %}
 
-<body class="d-flex justify-content-center align-items-center">
+{% block body %}
+<div class="h-100 d-flex justify-content-center align-items-center">
     <form class="text-center w-25">
         <div class="form-group">
             <input type="email" class="form-control" placeholder="Email" id="email-input">
@@ -24,6 +19,5 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
-</body>
-
-</html>
+</div>
+{% endblock %}

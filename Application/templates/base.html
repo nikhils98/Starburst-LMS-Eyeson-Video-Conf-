@@ -4,13 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap.min.css') }}">
-    <link rel="javascript" href="{{ url_for('static', filename='vendors/bootstrap.min.js') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> {% block head %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}{% endblock %}
 </head>
 
 <body>
     {% block body %} {% endblock %}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='vendors/jquery-3.2.1.slim.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vendors/popper.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vendors/bootstrap.min.js') }}"></script>
 </body>
 
 </html>

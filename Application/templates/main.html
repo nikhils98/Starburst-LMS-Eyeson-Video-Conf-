@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block body %}
+<div id="mySidebar" class="sidebar bg-dark">
+  <a href="#">Home</a>
+  <a href="#">Tools</a>
+  <a href="#">Sign Out</a>
+  <!--a href="#">Contact</a-->
+</div>
+
+<div id="topbar">
+  <nav class="pos-f-t navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" onclick="toggleNav()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+</div>
+
+<script type="text/javascript">
+
+  let sidebar = document.getElementById("mySidebar");
+  let topbar = document.getElementById("topbar");
+  function toggleNav() {
+    
+    sidebar.style.width === "0px" ? openNav() : closeNav();
+  }
+
+  function openNav() {
+    sidebar.style.width = "250px";
+    topbar.style.marginLeft = "250px";
+  }
+
+  /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+  function closeNav() {
+    sidebar.style.width = "0";
+    topbar.style.marginLeft = "0";
+  }
+</script>
+
+{% endblock %}
