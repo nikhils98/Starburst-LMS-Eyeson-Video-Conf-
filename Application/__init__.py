@@ -11,6 +11,4 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 db = SQLAlchemy(app)
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+from . import views
