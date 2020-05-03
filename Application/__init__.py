@@ -14,6 +14,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 db = SQLAlchemy(app)
 
 
-from . import models, views, login
+from . import models, views, login, assignments
 
+db.drop_all()
 db.create_all()

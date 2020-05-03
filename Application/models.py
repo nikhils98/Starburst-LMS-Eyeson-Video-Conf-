@@ -2,6 +2,7 @@ import enum
 from . import db
 from sqlalchemy.orm import relationship
 from sqlalchemy import Enum
+import datetime
 
 
 db.create_all()
@@ -69,9 +70,19 @@ class Course(db.Model):
         autoincrement=True
     )
     courseName = db.Column(
-        db.String(250),
+        db.String(120),
         index=True,
         nullable=False
+    )
+    courseDesc = db.Column(
+        db.String(255),
+        nullable=False
+    )
+    courseSemester = db.Column(
+        db.String(50)
+    )
+    courseYear = db.Column(
+        db.String(12),
     )
 
 class Enrollment(db.Model):
@@ -142,14 +153,18 @@ class Assignment(db.Model):
         autoincrement=True
     )
     assignmentName = db.Column(
-        db.String(250),
+        db.String(120),
         nullable=False
     )
-    deadline = db.Column(
+    assignmentDesc = db.Column(
+        db.String(255),
+        nullable=False
+    )
+    assignmentDeadline = db.Column(
         db.DateTime
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
-    course = relationship("Course")
+    courses = relationship("Course")
 
 class AssignmentFile(db.Model):
     __tablename__ = "assignment_files"
@@ -165,7 +180,7 @@ class AssignmentFile(db.Model):
         nullable=False
     )
     assignmentId = db.Column(db.Integer, db.ForeignKey('assignments.assignmentId'))
-    assignment = relationship("Assignment")
+    assignments = relationship("Assignment",backref='assignmentFiles')
 
 class AssignmentSubmission(db.Model):
     __tablename__ = "assignment_submissions"
@@ -177,6 +192,7 @@ class AssignmentSubmission(db.Model):
         autoincrement=True
     )
 
+    submissionTime = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     assignmentId = db.Column(db.Integer, db.ForeignKey('assignments.assignmentId'))
     assignment = relationship("Assignment")
     userId = db.Column(db.Integer, db.ForeignKey('users.userId'))
