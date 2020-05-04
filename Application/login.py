@@ -7,7 +7,7 @@ import hashlib
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    if session['id']:
+    if session.get('id'):
         return redirect('home')
     if request.method == 'GET':
         return render_template('index.html')

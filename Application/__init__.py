@@ -21,6 +21,7 @@ from . import models, views, login, assignments
 db.drop_all()
 db.create_all()
 
+# dummy data initialization
 org = models.Organization()
 org.orgName = 'IBA'
 
