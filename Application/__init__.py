@@ -1,6 +1,8 @@
-from flask import Flask, render_template, url_for
-from flask_sqlalchemy import SQLAlchemy
+import hashlib
 import os
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 # from flask_migrate import Migrate
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,6 +12,7 @@ print(database_file)
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+app.secret_key = 'secret_key_yo'
 
 db = SQLAlchemy(app)
 
@@ -17,3 +20,18 @@ from . import models, views, login, assignments
 
 db.drop_all()
 db.create_all()
+
+org = models.Organization()
+org.orgName = 'IBA'
+
+models.db.session.add(org)
+
+user = models.User()
+user.name = 'nikhil'
+user.email = 'nikhil.satiani@gmail.com'
+user.password = hashlib.md5('nikhil'.encode()).hexdigest()
+user.userRole = models.UserRole.User
+user.orgId = 1
+
+models.db.session.add(user)
+models.db.session.commit()
