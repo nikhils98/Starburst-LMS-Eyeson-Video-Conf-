@@ -7,6 +7,8 @@ import hashlib
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    if session['id']:
+        return redirect('home')
     if request.method == 'GET':
         return render_template('index.html')
     # get form information
@@ -35,7 +37,7 @@ def login():
     session['isAdmin'] = 1 if q.userRole == models.UserRole.Admin else 0
     session['id'] = q.userId
 
-    return redirect("/home")
+    return redirect("home")
 
 
 ###REGISTER THE USER
