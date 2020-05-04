@@ -1,16 +1,33 @@
-from Application import app
+from Application import app, org
 from Application import models
-from flask import request, render_template, redirect, flash, session
+from flask import request, render_template, redirect, flash, session, send_file
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
 
 ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
-# making a files directory to keep things tidy. Also easy to add in gitignore
-PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
+PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
+
+@app.route('/downloadAssignment',methods=['GET'])
+def downloadAssignment():
+    fileId = request.args.get('id')
+    if not fileId:
+        flash('send file id')
+        return 'send file id'
+    q = models.AssignmentFile.query.filter_by(assignmintFileId=fileId).first()
+    if not q:
+        flash('No file found')
+        return 'no file found'
+    else:
+        assFile = q
+        return send_file(assFile.filePath,as_attachment=True)
+
+
 
 @app.route('/createAssignment', methods=['GET', 'POST'])
 def createAssignment():
+    # making a files directory to keep things tidy. Also easy to add in gitignore
+
     if request.method == 'GET':
         return render_template('create_assignment_modal.html')
     else:
@@ -18,9 +35,8 @@ def createAssignment():
         assignmentName = formData['assignmentName']
         assignmentDesc = formData['assignmentDesc']
 
-        # We need to include time here as well. When u change it to that,
-        # I'll add time in html modal as well
-        assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y-%m-%d')
+        # We need to include time here as well. When u change it to that: DONE
+        assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y-%m-%d %H:%M:%S')
 
         print(assignmentName, assignmentDesc, assignmentDeadline)
 

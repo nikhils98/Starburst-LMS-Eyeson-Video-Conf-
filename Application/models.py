@@ -142,6 +142,10 @@ class Resource(db.Model):
     filePath = db.Column(
         db.String(250)
     )
+    uploadedDate = db.Column(
+        db.DateTime,
+        default=datetime.datetime.utcnow()
+    )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course")
 
