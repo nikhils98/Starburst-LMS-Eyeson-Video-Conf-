@@ -1,10 +1,16 @@
-from Application import  app
+from sqlalchemy import func
+
+from Application import app
 from Application import models
 from flask import request, render_template, redirect, flash, session
 import hashlib
 
-@app.route('/login2', methods=['POST'])
-def login2():
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if session.get('id'):
+        return redirect('home')
+    if request.method == 'GET':
+        return render_template('index.html')
     # get form information
     formData = request.form
 
@@ -16,8 +22,12 @@ def login2():
         flash("The password field is required.")
         return redirect("/")
 
+    # count = models.db.session.query(func.count(models.User.name)).scalar()
+    # print(count)
 
-    q = models.User.query.filter_by(email=formData['name'],password=hashlib.md5(formData['password'].encode()).hexdigest()).first()
+    print(formData['email'], hashlib.md5(formData['password'].encode()).hexdigest())
+    q = models.User.query.filter_by(email=formData['email'],
+                                    password=hashlib.md5(formData['password'].encode()).hexdigest()).first()
     if q == None:
         print('Your email/password was incorrect.')
         flash("Your email/password was incorrect.")
@@ -27,7 +37,7 @@ def login2():
     session['isAdmin'] = 1 if q.userRole == models.UserRole.Admin else 0
     session['id'] = q.userId
 
-    return redirect("/")
+    return redirect("home")
 
 
 ###REGISTER THE USER

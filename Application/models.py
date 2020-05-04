@@ -95,9 +95,9 @@ class Enrollment(db.Model):
         autoincrement=True
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
-    course = relationship("Course")
+    course = relationship("Course", backref="enrollments")
     userId = db.Column(db.Integer, db.ForeignKey('users.userId'))
-    user = relationship("User",backref="users")
+    user = relationship("User", backref="enrollments")
 
     enrollmentRole = db.Column(Enum(EnrollmentRole))
 
