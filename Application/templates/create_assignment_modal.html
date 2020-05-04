@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block head %}
+                    <script>
+                              $('#datetimepicker').datetimepicker();
+                    </script>
 {% endblock %}
 
 {% block body %}
@@ -30,9 +33,14 @@
                                   placeholder="Description"></textarea>
                     </div>
                     <div class="form-group">
-                        <input type="date" class="form-control" name="assignmentDeadline"
+                        <input type="text" id="datetimepicker" class="form-control" name="assignmentDeadline"
                                placeholder="Deadline">
                     </div>
+                    <script>
+                        $.datetimepicker.setLocale('en');
+                        $('#datetimepicker').datetimepicker();
+                    </script>
+
                     <div class="form-group">
                         <input type="file" name="files" multiple>
                     </div>

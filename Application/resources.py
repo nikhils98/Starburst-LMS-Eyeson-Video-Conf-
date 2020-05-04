@@ -35,14 +35,14 @@ def createResource():
 
         if resourceName == '':
             flash('resource fields empty')
-            return 'resource fields empty'
+            return render_template('create_resource_modal.html')
 
         newResource = models.Resource()
         newResource.resourceName = resourceName
 
         if "file" not in request.files:
             flash('Please upload files')
-            return 'please upload file'
+            return render_template('create_resource_modal.html')
 
         file = request.files['file']
         # this is needed to create dir if it doesn't exist, otherwise file.save fails.
@@ -57,6 +57,7 @@ def createResource():
 
             models.db.session.add(newResource)
             models.db.session.commit()
-            return 'uploaded!'
+            return render_template('create_resource_modal.html')
         else:
-            return 'couldnt upload :('
+            flash('couldnt upload :(')
+            return render_template('create_resource_modal.html')

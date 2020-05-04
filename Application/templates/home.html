@@ -10,4 +10,22 @@
 {% block body %}
 {{ super() }}
 
+<div class="container" style="margin-top: 5%">
+    <div class="row row-cols-3">
+        {% for c in courses %}
+        <div class="col">
+            <div class="card text-center" style="cursor: pointer">
+                <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."
+                     height="200">
+                <div class="card-body">
+                    <h5 class="card-title">{{ c.courseName }}</h5>
+                    <p class="card-text">{{ c.courseDesc }}</p>
+                    <p class="card-text">{{ c.courseSemester }}: {{ c.courseYear }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}
