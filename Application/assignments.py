@@ -6,8 +6,8 @@ from werkzeug.utils import secure_filename
 import os
 
 ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# making a files directory to keep things tidy. Also easy to add in gitignore
+PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
 
 @app.route('/createAssignment', methods=['GET', 'POST'])
 def createAssignment():
@@ -18,6 +18,8 @@ def createAssignment():
         assignmentName = formData['assignmentName']
         assignmentDesc = formData['assignmentDesc']
 
+        # We need to include time here as well. When u change it to that,
+        # I'll add time in html modal as well
         assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y-%m-%d')
 
         print(assignmentName, assignmentDesc, assignmentDeadline)
@@ -32,10 +34,15 @@ def createAssignment():
         newAssignment.assignmentDeadline = assignmentDeadline
 
         files = request.files.getlist("files")
+
+        # this is needed to create dir if it doesn't exist, otherwise file.save fails.
         assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER)
         if not os.path.exists(assignmentDir):
             os.makedirs(assignmentDir)
+
         for file in files:
+            # for some reason when not uploading any file it was still reaching this code
+            # with an empty file so I included this check for now
             if file:
                 path = os.path.join(assignmentDir, secure_filename(file.filename))
                 file.save(path)
