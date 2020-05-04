@@ -20,4 +20,4 @@ def index():
 
     #courses = models.Enrollment.query.filter_by(user_id=user_id).select_from().all()
 
-    return render_template('home.html')
+    return render_template('home.html', courses=courses)

@@ -1,5 +1,6 @@
 from Application import app
 from Application import models
+from Application.decorators.authenticate import authenticate
 from flask import request, render_template, redirect, flash, session
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -10,6 +11,7 @@ ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
 
 @app.route('/createAssignment', methods=['GET', 'POST'])
+@authenticate
 def createAssignment():
     if request.method == 'GET':
         return render_template('create_assignment_modal.html')
