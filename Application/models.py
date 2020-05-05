@@ -204,6 +204,7 @@ class AssignmentSubmission(db.Model):
     assignment = relationship("Assignment")
     userId = db.Column(db.Integer, db.ForeignKey('users.userId'))
     user = relationship("User")
+    comment = db.Column(db.String(500))
 
     gradeReceived = db.Column(
         db.String(10)

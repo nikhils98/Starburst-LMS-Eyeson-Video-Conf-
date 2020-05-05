@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from markupsafe import escape
 import os
 
-ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
+ASSIGNMENT_SUBMISSION_FOLDER = 'assignments/{}/submissions'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
 @app.route('/assignmentSubmission/<id>')
@@ -68,29 +68,32 @@ def submit_assignment(id):
     submission = models.AssignmentSubmission()
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
-    submission.submissionTime = datetime.datetime.today()
+    submission.submissionTime = datetime.today()
+    submission.comment = formData["comment"]
+
+    models.db.session.add(submission)
+    models.db.session.flush()
 
     files = request.files.getlist("files")
 
     # this is needed to create dir if it doesn't exist, otherwise file.save fails.
-    submissionDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER)
-    if not os.path.exists(submissionDir):
-        os.makedirs(submissionDir)
+    submissionDir = os.path.join(PROJECT_DIR, ASSIGNMENT_SUBMISSION_FOLDER.format(str(submission.assignmentId)),
+                                 str(submission.assignmentSubmissionId))
 
-    # for file in files:
-    #     # for some reason when not uploading any file it was still reaching this code
-    #     # with an empty file so I included this check for now
-    #     if file:
-    #         path = os.path.join(assignmentDir, secure_filename(file.filename))
-    #         file.save(path)
-    #         newAssignmentFile = models.AssignmentFile()
-    #         newAssignmentFile.filePath = path
-    #
-    #         newAssignment.assignmentFiles.append(newAssignmentFile)
+    for file in files:
+        if file:
+            if not os.path.exists(submissionDir):
+                os.makedirs(submissionDir)
+            path = os.path.join(submissionDir, secure_filename(file.filename))
+            file.save(path)
+            submissionFile = models.SubmissionFile()
+            submissionFile.filePath = path
+            submissionFile.submissionId = submission.assignmentSubmissionId
 
-    models.db.session.add(submission)
+            models.db.session.add(submissionFile)
+
     models.db.session.commit()
 
     # after successful submission
     flash("Assignment Submitted")
-    return redirect('assignmentSubmission')
+    return redirect('submitAssignment')
