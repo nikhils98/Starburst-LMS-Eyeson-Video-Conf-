@@ -13,10 +13,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/jquery.datetimepicker.min.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='vendors/jquery.datetimepicker.full.min.js') }}"></script>
 
-
-    <script type="text/javascript">
-        $("#serverMsgModal").modal('show');
-    </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     {% block head %}{% endblock %}
@@ -49,7 +45,9 @@
     {% endwith %}
 
     {% block body %} {% endblock %}
-
+    <script type="text/javascript">
+        $("#serverMsgModal").modal('show');
+    </script>
 
 </body>
 

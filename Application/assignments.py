@@ -9,7 +9,8 @@ import os
 ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
-@app.route('/downloadAssignment',methods=['GET'])
+
+@app.route('/downloadAssignment', methods=['GET'])
 def downloadAssignment():
     fileId = request.args.get('id')
     if not fileId:
@@ -21,8 +22,7 @@ def downloadAssignment():
         return 'no file found'
     else:
         assFile = q
-        return send_file(assFile.filePath,as_attachment=True)
-
+        return send_file(assFile.filePath, as_attachment=True)
 
 
 @app.route('/createAssignment', methods=['GET', 'POST'])
@@ -37,14 +37,13 @@ def createAssignment():
         assignmentName = formData['assignmentName']
         assignmentDesc = formData['assignmentDesc']
 
+        print(assignmentName, assignmentDesc, formData["assignmentDeadline"])
         # We need to include time here as well. When u change it to that: DONE
         try:
-            assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y-%m-%d %H:%M:%S')
+            assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
         except ValueError:
             flash('Please enter date time field')
             return render_template('create_assignment_modal.html')
-
-        print(assignmentName, assignmentDesc, assignmentDeadline)
 
         if assignmentDesc == '' or assignmentName == '':
             flash('assignment fields empty')
@@ -55,24 +54,30 @@ def createAssignment():
         newAssignment.assignmentName = assignmentName
         newAssignment.assignmentDeadline = assignmentDeadline
 
+        # to get the assignmentId. Unlike commit, flush kinda communicates the changes
+        # to db but they're not persisted in disk. Commit ensures data is written to disk
+        models.db.session.add(newAssignment)
+        models.db.session.flush()
+
         files = request.files.getlist("files")
 
         # this is needed to create dir if it doesn't exist, otherwise file.save fails.
-        assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER)
-        if not os.path.exists(assignmentDir):
-            os.makedirs(assignmentDir)
+        assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER, str(newAssignment.assignmentId))
 
         for file in files:
             # for some reason when not uploading any file it was still reaching this code
             # with an empty file so I included this check for now
             if file:
+                if not os.path.exists(assignmentDir):
+                    os.makedirs(assignmentDir)
                 path = os.path.join(assignmentDir, secure_filename(file.filename))
                 file.save(path)
                 newAssignmentFile = models.AssignmentFile()
                 newAssignmentFile.filePath = path
+                newAssignmentFile.assignmentId = newAssignment.assignmentId
 
-                newAssignment.assignmentFiles.append(newAssignmentFile)
+                models.db.session.add(newAssignmentFile)
 
-        models.db.session.add(newAssignment)
-        models.db.session.commit()
-        return render_template('create_assignment_modal.html')
+    models.db.session.commit()
+    flash("Successfully created")
+    return render_template('create_assignment_modal.html')

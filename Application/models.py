@@ -209,4 +209,19 @@ class AssignmentSubmission(db.Model):
         db.String(10)
     )
 
+class SubmissionFile(db.Model):
+    __tablename__ = "submission_files"
+    # __table_args__ = {"schema": "starburst"}
+
+    submissionFileId = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+    filePath = db.Column(
+        db.String(250),
+        nullable=False
+    )
+    submissionId = db.Column(db.Integer, db.ForeignKey('assignment_submissions.assignmentSubmissionId'))
+    submission = relationship("AssignmentSubmission", backref='submissionFiles')
 

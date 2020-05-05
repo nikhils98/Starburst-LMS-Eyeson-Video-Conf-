@@ -70,6 +70,26 @@ def submit_assignment(id):
     submission.userId = session["id"]
     submission.submissionTime = datetime.datetime.today()
 
+    files = request.files.getlist("files")
+
+    # this is needed to create dir if it doesn't exist, otherwise file.save fails.
+    submissionDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER)
+    if not os.path.exists(submissionDir):
+        os.makedirs(submissionDir)
+
+    # for file in files:
+    #     # for some reason when not uploading any file it was still reaching this code
+    #     # with an empty file so I included this check for now
+    #     if file:
+    #         path = os.path.join(assignmentDir, secure_filename(file.filename))
+    #         file.save(path)
+    #         newAssignmentFile = models.AssignmentFile()
+    #         newAssignmentFile.filePath = path
+    #
+    #         newAssignment.assignmentFiles.append(newAssignmentFile)
+
+    models.db.session.add(submission)
+    models.db.session.commit()
 
     # after successful submission
     flash("Assignment Submitted")
