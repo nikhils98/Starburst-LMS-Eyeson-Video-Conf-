@@ -229,6 +229,9 @@ class SubmissionFile(db.Model):
         db.String(250),
         nullable=False
     )
+    fileName = db.Column(
+        db.String(255)
+    )
     submissionId = db.Column(db.Integer, db.ForeignKey('assignment_submissions.assignmentSubmissionId'))
     submission = relationship("AssignmentSubmission", backref='submissionFiles')
 

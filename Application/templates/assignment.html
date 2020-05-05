@@ -20,8 +20,6 @@
         <br>
         <p> Assignment Deadline: {{ assignment.assignmentDeadline }}</p>
         <br>
-        <p> Assignment Name: {{ assignment.assignmentName }}</p>
-        <br>
         <p> Total Marks: {{ assignment.totalMarks }}</p>
         <br>
         <p> Assignment Uploaded Date: {{ assignment.uploadDateTime }}</p>
@@ -32,6 +30,8 @@
                 <br>
         {% endfor %}
         </ul>
+        <br>
+        <a href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>Click for Assignment Submission</a>
     </div>
 </div>
 

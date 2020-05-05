@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block head %}
+<!--To render parent's stuff in the same block-->
+{{ super() }}
+
+<title>Assignment Submission Detail</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+    <h1>Assignment Submission of {{ submission.user.name }} </h1>
+    <p> Submission at: {{ submission.submissionTime  }} </p>
+    <p> {{ submission.comment }}</p>
+    <p> Submission Files (if any)</p>
+    {% for file in submission.submissionFiles %}
+    <a href = {{ url_for('downloadSubmission' ,id=file.submissionFileId) }}>{{ file.fileName }}</a>
+    <br>
+    {% endfor %}
+{% endblock %}

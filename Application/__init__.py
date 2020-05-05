@@ -99,6 +99,8 @@ sub = models.AssignmentSubmission()
 sub.assignmentId = 1
 sub.userId = 1
 sub.submissionTime = datetime.datetime.today()
+sub.comment = 'Im awesome, please give me full marks'
+
 
 models.db.session.add(sub)
 
@@ -106,6 +108,7 @@ sub = models.AssignmentSubmission()
 sub.assignmentId = 1
 sub.userId = 2
 sub.submissionTime = datetime.datetime.today()
+sub.comment = 'Im awesome, please give me full marks'
 
 models.db.session.add(sub)
 

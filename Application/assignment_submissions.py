@@ -93,6 +93,7 @@ def submitAssignment(id):
             file.save(path)
             submissionFile = models.SubmissionFile()
             submissionFile.filePath = path
+            submissionFile.fileName = file.filename
             submissionFile.submissionId = submission.assignmentSubmissionId
 
             models.db.session.add(submissionFile)
@@ -125,6 +126,14 @@ def gradeAssignmentSubmission(id):
 
     flash('Graded Assignment')
     return redirect('submitAssignment')
+
+@app.route('/assignmentSubmission/detail/<id>')
+@authenticate
+def assignmentSubmissionDetail(id):
+    print(id)
+    assignmentSubmissionId = escape(id)
+    submission = models.AssignmentSubmission.query.filter_by(assignmentSubmissionId=assignmentSubmissionId).first()
+    return render_template('assignment_submission_detail.html',submission=submission)
 
 
 
