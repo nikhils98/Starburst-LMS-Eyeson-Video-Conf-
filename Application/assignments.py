@@ -10,13 +10,36 @@ ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
 
-@app.route('/downloadAssignment', methods=['GET'])
-def downloadAssignment():
-    fileId = request.args.get('id')
+# Get list of assignments By Course
+@app.route('/assignments/<id>',methods=['GET'])
+def getAssignmentsByCourse(id):
+    assignments = models.Assignment.query.filter_by(courseId=id).all()
+
+    filteredAssignments = []
+
+    for ass in assignments:
+        if ass.course.courseId == int(id):
+            filteredAssignments.append(ass)
+
+    return render_template('assignments.html',assignments=filteredAssignments)
+
+@app.route('/assignments/detail/<id>',methods=['GET'])
+def getAssignmentDetailById(id):
+    assignment = models.Assignment.query.filter_by(assignmentId=id).first()
+    if not assignment:
+        flash('Assignment did not exist')
+        return redirect('/home')
+    return render_template('assignment.html',assignment=assignment)
+
+
+
+@app.route('/asssignments/download/<id>', methods=['GET'])
+def downloadAssignment(id):
+    fileId = id
     if not fileId:
         flash('send file id')
         return 'send file id'
-    q = models.AssignmentFile.query.filter_by(assignmintFileId=fileId).first()
+    q = models.AssignmentFile.query.filter_by(assignmentFileId=fileId).first()
     if not q:
         flash('No file found')
         return 'no file found'
@@ -24,12 +47,14 @@ def downloadAssignment():
         assFile = q
         return send_file(assFile.filePath, as_attachment=True)
 
-
-@app.route('/createAssignment', methods=['GET', 'POST'])
+@app.route('/<course_id>/createAssignment', methods=['GET', 'POST'])
 @authenticate
-def createAssignment():
+def createAssignment(course_id):
+    course = models.Course.query.filter_by(courseId=course_id).first()
+    if not course:
+        flash('No Course for this to create Assignment')
+        return redirect('/home')
     # making a files directory to keep things tidy. Also easy to add in gitignore
-
     if request.method == 'GET':
         return render_template('create_assignment_modal.html')
     else:
@@ -56,6 +81,7 @@ def createAssignment():
         newAssignment.assignmentDeadline = assignmentDeadline
         newAssignment.uploadDateTime = datetime.today()
         newAssignment.totalMarks = float(totalMarks)
+        newAssignment.courseId = course.courseId
 
         # to get the assignmentId. Unlike commit, flush kinda communicates the changes
         # to db but they're not persisted in disk. Commit ensures data is written to disk
@@ -78,10 +104,12 @@ def createAssignment():
                 newAssignmentFile = models.AssignmentFile()
                 newAssignmentFile.filePath = path
                 newAssignmentFile.assignmentId = newAssignment.assignmentId
-
+                newAssignmentFile.fileName = file.filename
                 models.db.session.add(newAssignmentFile)
 
         models.db.session.add(newAssignment)
         models.db.session.commit()
         flash("Successfully created")
         return render_template('create_assignment_modal.html')
+
+

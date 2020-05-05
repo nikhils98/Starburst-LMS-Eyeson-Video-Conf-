@@ -188,6 +188,9 @@ class AssignmentFile(db.Model):
         db.String(250),
         nullable=False
     )
+    fileName = db.Column(
+        db.String(100)
+    )
     assignmentId = db.Column(db.Integer, db.ForeignKey('assignments.assignmentId'))
     assignments = relationship("Assignment",backref='assignmentFiles')
 
@@ -204,6 +207,7 @@ class AssignmentSubmission(db.Model):
     submissionTime = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     assignmentId = db.Column(db.Integer, db.ForeignKey('assignments.assignmentId'))
     assignment = relationship("Assignment")
+    assignmentGrade = db.Column(db.String(20))
     userId = db.Column(db.Integer, db.ForeignKey('users.userId'))
     user = relationship("User")
     comment = db.Column(db.String(500))

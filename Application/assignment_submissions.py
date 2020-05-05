@@ -68,6 +68,7 @@ def submit_assignment(id):
     submission = models.AssignmentSubmission()
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
+    # Technically not needed since default in db is currentime
     submission.submissionTime = datetime.today()
     submission.comment = formData["comment"]
 
@@ -97,3 +98,29 @@ def submit_assignment(id):
     # after successful submission
     flash("Assignment Submitted")
     return redirect('submitAssignment')
+
+
+@app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])
+def gradeAssignmentSubmission(id):
+    result = models.AssignmentSubmission.query.filter_by(assignmentSubmissionId=id).first()
+    if not result:
+        flash('Assignment Submission does not exist')
+        return redirect('submitAssignment')
+
+    formData = request.form
+    if 'assignmentGrade' not in formData:
+        flash('Please send grade')
+        return redirect('submitAssignment')
+
+    grade = formData['assignmentGrade']
+
+
+    result.assignmentGrade = grade
+    models.db.session.add(result)
+    models.db.session.commit()
+
+    flash('Graded Assignment')
+    return redirect('submitAssignment')
+
+
+
