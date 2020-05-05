@@ -111,8 +111,11 @@ class Class(db.Model):
         autoincrement=True
     )
     className = db.Column(
-        db.String(250),
+        db.String(60),
         nullable=False
+    )
+    classAgenda = db.Column(
+        db.String(255)
     )
     recordingLink = db.Column(
         db.String(400)
@@ -138,6 +141,10 @@ class Resource(db.Model):
     )
     filePath = db.Column(
         db.String(250)
+    )
+    uploadedDate = db.Column(
+        db.DateTime,
+        default=datetime.datetime.utcnow()
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course")
