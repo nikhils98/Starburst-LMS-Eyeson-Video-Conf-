@@ -171,7 +171,9 @@ class Assignment(db.Model):
         db.DateTime
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
-    courses = relationship("Course")
+    course = relationship("Course", backref="assignments")
+    totalMarks = db.Column(db.Float, nullable=False)
+    uploadDateTime = db.Column(db.DateTime, nullable=False)
 
 class AssignmentFile(db.Model):
     __tablename__ = "assignment_files"
@@ -204,9 +206,25 @@ class AssignmentSubmission(db.Model):
     assignment = relationship("Assignment")
     userId = db.Column(db.Integer, db.ForeignKey('users.userId'))
     user = relationship("User")
+    comment = db.Column(db.String(500))
 
     gradeReceived = db.Column(
         db.String(10)
     )
 
+class SubmissionFile(db.Model):
+    __tablename__ = "submission_files"
+    # __table_args__ = {"schema": "starburst"}
+
+    submissionFileId = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+    filePath = db.Column(
+        db.String(250),
+        nullable=False
+    )
+    submissionId = db.Column(db.Integer, db.ForeignKey('assignment_submissions.assignmentSubmissionId'))
+    submission = relationship("AssignmentSubmission", backref='submissionFiles')
 
