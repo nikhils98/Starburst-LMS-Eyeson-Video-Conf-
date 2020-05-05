@@ -39,8 +39,6 @@
         {% endif %}
     {% endwith %}
 
-    {% block body %} {% endblock %}
-
     <script type="text/javascript" src="{{ url_for('static', filename='vendors/jquery-3.2.1.slim.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendors/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendors/bootstrap.min.js') }}"></script>
@@ -50,6 +48,7 @@
         $("#serverMsgModal").modal('show');
     </script>
 
-</body>
+    {% block body %} {% endblock %}
 
+</body>
 </html>

@@ -90,6 +90,8 @@ assign.courseId = 1
 assign.assignmentDeadline = datetime.datetime.today()
 assign.assignmentDesc = "krle bhai"
 assign.assignmentName = "testing"
+assign.totalMarks = 10.5
+assign.uploadDateTime = datetime.datetime.today()
 
 models.db.session.add(assign)
 

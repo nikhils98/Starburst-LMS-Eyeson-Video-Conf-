@@ -36,8 +36,9 @@ def createAssignment():
         formData = request.form
         assignmentName = formData['assignmentName']
         assignmentDesc = formData['assignmentDesc']
+        totalMarks = formData['totalMarks']
 
-        print(assignmentName, assignmentDesc, formData["assignmentDeadline"])
+        print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
         # We need to include time here as well. When u change it to that: DONE
         try:
             assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
@@ -45,7 +46,7 @@ def createAssignment():
             flash('Please enter date time field')
             return render_template('create_assignment_modal.html')
 
-        if assignmentDesc == '' or assignmentName == '':
+        if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
             flash('assignment fields empty')
             return render_template('create_assignment_modal.html')
 
@@ -53,6 +54,8 @@ def createAssignment():
         newAssignment.assignmentDesc = assignmentDesc
         newAssignment.assignmentName = assignmentName
         newAssignment.assignmentDeadline = assignmentDeadline
+        newAssignment.uploadDateTime = datetime.today()
+        newAssignment.totalMarks = float(totalMarks)
 
         # to get the assignmentId. Unlike commit, flush kinda communicates the changes
         # to db but they're not persisted in disk. Commit ensures data is written to disk

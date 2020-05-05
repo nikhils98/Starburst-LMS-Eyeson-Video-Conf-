@@ -172,6 +172,8 @@ class Assignment(db.Model):
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course", backref="assignments")
+    totalMarks = db.Column(db.Float, nullable=False)
+    uploadDateTime = db.Column(db.DateTime, nullable=False)
 
 class AssignmentFile(db.Model):
     __tablename__ = "assignment_files"
