@@ -10,7 +10,7 @@ ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
 @app.route('/downloadAssignment',methods=['GET'])
-def downloadAssignment():
+def downloadAssignmentById():
     fileId = request.args.get('id')
     if not fileId:
         flash('send file id')
@@ -76,3 +76,5 @@ def createAssignment():
         models.db.session.add(newAssignment)
         models.db.session.commit()
         return render_template('create_assignment_modal.html')
+
+
