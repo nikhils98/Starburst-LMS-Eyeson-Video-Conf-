@@ -171,7 +171,7 @@ class Assignment(db.Model):
         db.DateTime
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
-    courses = relationship("Course")
+    course = relationship("Course", backref="assignments")
 
 class AssignmentFile(db.Model):
     __tablename__ = "assignment_files"

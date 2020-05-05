@@ -1,5 +1,6 @@
 import hashlib
 import os
+import datetime
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -75,9 +76,37 @@ e2.userId = 1
 e2.courseId = 2
 e2.enrollmentRole = models.EnrollmentRole.Student
 
+e3 = models.Enrollment()
+e3.userId = 2
+e3.courseId = 1
+e3.enrollmentRole = models.EnrollmentRole.Student
+
 models.db.session.add(e1)
 models.db.session.add(e2)
+models.db.session.add(e3)
+
+assign = models.Assignment()
+assign.courseId = 1
+assign.assignmentDeadline = datetime.datetime.today()
+assign.assignmentDesc = "krle bhai"
+assign.assignmentName = "testing"
+
+models.db.session.add(assign)
+
+sub = models.AssignmentSubmission()
+sub.assignmentId = 1
+sub.userId = 1
+sub.submissionTime = datetime.datetime.today()
+
+models.db.session.add(sub)
+
+sub = models.AssignmentSubmission()
+sub.assignmentId = 1
+sub.userId = 2
+sub.submissionTime = datetime.datetime.today()
+
+models.db.session.add(sub)
 
 models.db.session.commit()
 
-from . import views, login, assignments, resources
+from . import views, login, assignments, resources, assignment_submissions
