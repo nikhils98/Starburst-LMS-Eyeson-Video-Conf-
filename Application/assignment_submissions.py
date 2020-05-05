@@ -49,17 +49,21 @@ def assignmentSubmission(id):
     return render_template('assignment_submission.html', submissions=submissions,
                            enrollmentRole=enrollmentRole)
 
-@app.route('/downloadSubmission')
+@app.route('/downloadSubmission/<id>')
 @authenticate
-def downloadSubmission():
-    # logic for downloading
+def downloadSubmission(id):
+    submissionFileId = escape(id)
 
-    # after successful download
+    submissionFile = models.SubmissionFile.query.filter_by(submissionFileId=submissionFileId).first()
+    if not submissionFile:
+        flash('No file found')
+    else:
+        return send_file(submissionFile.filePath, as_attachment=True)
     return redirect('assignmentSubmission')
 
 @app.route('/submitAssignment/<id>', methods=["GET", "POST"])
 @authenticate
-def submit_assignment(id):
+def submitAssignment(id):
     if request.method == "GET":
         return render_template('submit_assignment_modal.html')
     # logic for submission
