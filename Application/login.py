@@ -1,9 +1,9 @@
-from sqlalchemy import func
-
 from Application import app
 from Application import models
+from Application.decorators.authenticate import authenticate
 from flask import request, render_template, redirect, flash, session
 import hashlib
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -77,3 +77,10 @@ def register():
     print('The User was created')
     flash("The user was created")
     return redirect("/register/")
+
+@app.route('/logout', methods=['GET'])
+@authenticate
+def logout():
+    session.pop('id')
+    return redirect('/')
+
