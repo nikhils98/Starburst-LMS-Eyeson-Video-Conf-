@@ -10,5 +10,12 @@
 {% block body %}
 {{ super() }}
 
+    <h1>Assignment submissions so far (if any)</h1>
+    <ul>
+    {% for submission in submissions %}
+        <li> Submission at: {{ submission.submissionTime  }} ( {{ submission.user.name }}) <a href={{ url_for('assignmentSubmissionDetail',id=submission.assignmentSubmissionId) }}> Click to view Assignment Submission</a></li>
+    {% endfor %}
+    </ul>
+
 
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block head %}
+<!--To render parent's stuff in the same block-->
+{{ super() }}
+
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+<div class="container" style="margin-top: 5%">
+    <h1>Assignments List</h1>
+    <div class="row row-cols-12">
+        <br>
+        <ul>
+        {% for a in assignments %}
+        <li> {{ a.assignmentName }} : {{ a.assignmentDesc }} <a href= {{ url_for('getAssignmentDetailById' ,id=a.assignmentId) }}>Click for Viewing Assignment</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

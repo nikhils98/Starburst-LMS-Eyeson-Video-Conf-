@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block head %}
+<!--To render parent's stuff in the same block-->
+{{ super() }}
+
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+<div class="container" style="margin-top: 5%">
+    <h1>Assignments Detail View</h1>
+    <div>
+        <br>
+        <p> Assignment Name: {{ assignment.assignmentName }}</p>
+        <br>
+        <p> Assignment Description: {{ assignment.assignmentDesc }}</p>
+        <br>
+        <p> Assignment Deadline: {{ assignment.assignmentDeadline }}</p>
+        <br>
+        <p> Total Marks: {{ assignment.totalMarks }}</p>
+        <br>
+        <p> Assignment Uploaded Date: {{ assignment.uploadDateTime }}</p>
+        <br>
+        <p><b>Assignment Files (if any) :</b></p>
+        {%  for file in assignment.assignmentFiles %}
+                <a href = {{ url_for('downloadAssignment' ,id=file.assignmentFileId) }}>{{ file.fileName }}</a>
+                <br>
+        {% endfor %}
+        </ul>
+        <br>
+        <a href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>Click for Assignment Submission</a>
+    </div>
+</div>
+
+{% endblock %}
