@@ -9,17 +9,29 @@
 
 {% block body %}
 {{ super() }}
-
 <div class="container" style="margin-top: 5%">
-    <h1>Assignments List</h1>
-    <div class="row row-cols-12">
-        <br>
-        <ul>
-        {% for a in assignments %}
-        <li> {{ a.assignmentName }} : {{ a.assignmentDesc }} <a href= {{ url_for('getAssignmentDetailById' ,id=a.assignmentId) }}>Click for Viewing Assignment</a></li>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Marks</th>
+            <th scope="col">Open</th>
+            <th scope="col">Due</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for assignment in assignments %}
+        <tr>
+            <th scope="row">{{assignment.assignmentName}}</th>
+            <td>{{assignment.totalMarks}}</td>
+            <td>{{assignment.uploadDateTime}}</td>
+            <td>{{assignment.assignmentDeadline}}</td>
+        </tr>
         {% endfor %}
-        </ul>
-    </div>
+        </tbody>
+
+    </table>
 </div>
 
 {% endblock %}

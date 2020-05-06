@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block head %}
+<!--To render parent's stuff in the same block-->
+{{ super() }}
+
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class="container" style="margin-top: 5%">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Created On</th>
+            <th scope="col">Path</th>
+        </tr>
+        </thead>
+        {% for resource in resources %}
+        <tbody>
+        <tr>
+            <th scope="row">{{resource.resourceName}}</th>
+            <td>{{resource.uploadedDate}}</td>
+            <td>{{resource.filePath}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+
+{% endblock %}

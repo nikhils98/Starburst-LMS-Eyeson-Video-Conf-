@@ -15,6 +15,7 @@
         {% for c in courses %}
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
+                <a href={{ url_for('coursesite' ,id=c.courseId) }}>
                 <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."
                      height="200">
                 <div class="card-body">
@@ -22,7 +23,7 @@
                     <p class="card-text">{{ c.courseDesc }}</p>
                     <p class="card-text">{{ c.courseSemester }}: {{ c.courseYear }}</p>
                 </div>
-                <a href = {{ url('' ,id=c.courseId) }}>Go to Course</a>
+                </a>
             </div>
         </div>
         {% endfor %}

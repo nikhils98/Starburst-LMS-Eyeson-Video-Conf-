@@ -28,6 +28,8 @@ def assignmentPage():
 
 @app.route('/coursesite')
 @authenticate
-def courseSite(id):
+def coursesite(id=None):
     user_id = session['id']
+    if id == None:
+        id = 1
     return render_template('course_page.html.', id=id)
