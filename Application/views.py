@@ -21,3 +21,13 @@ def index():
     #courses = models.Enrollment.query.filter_by(user_id=user_id).select_from().all()
 
     return render_template('home.html', courses=courses)
+
+@app.route('/assignment')
+def assignmentPage():
+    return render_template('assignments.html.')
+
+@app.route('/coursesite')
+@authenticate
+def courseSite(id):
+    user_id = session['id']
+    return render_template('course_page.html.', id=id)

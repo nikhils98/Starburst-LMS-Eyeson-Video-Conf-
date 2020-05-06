@@ -22,7 +22,7 @@
                     <p class="card-text">{{ c.courseDesc }}</p>
                     <p class="card-text">{{ c.courseSemester }}: {{ c.courseYear }}</p>
                 </div>
-                <a href = {{ url_for('getAssignmentsByCourse' ,id=c.courseId) }}>Get Assignments</a>
+                <a href = {{ url('' ,id=c.courseId) }}>Go to Course</a>
             </div>
         </div>
         {% endfor %}
