@@ -14,7 +14,7 @@
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
                 <a href = {{ url_for('getAssignmentsByCourse' ,id=id) }}>
-                <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."
+                <img src="../static/img/default_homework.jpg" class="card-img-top" alt="..."
                      height="200">
                 <div class="card-body">
                     <h5 class="card-title">{{ "Assignments" }}</h5>
@@ -25,17 +25,19 @@
         </div>
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
-                <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."
+                <a href = {{ url_for('getResourcesByCourse' ,id=id) }}>
+                <img src="../static/img/default_resources.jpg" class="card-img-top" alt="..."
                      height="200">
                 <div class="card-body">
                     <h5 class="card-title">{{ "Resources" }}</h5>
                 </div>
-<!--                <a href = {{ url_for('getAssignmentsByCourse' ,id=1) }}>Get Assignments</a>-->
+                </a>
+{#                <a href = {{ url_for('getResourcesByCourse' ,id=id) }}>Get Assignments</a>#}
             </div>
         </div>
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
-                <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."
+                <img src="../static/img/default_recordings.jpg" class="card-img-top" alt="..."
                      height="200">
                 <div class="card-body">
                     <h5 class="card-title">{{ "Lecture Recordings" }}</h5>

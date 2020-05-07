@@ -22,6 +22,13 @@ def downloadResource():
         resource = q
         return send_file(resource.filePath,as_attachment=True)
 
+# Get list of resources By Course
+@app.route('/resources/<id>',methods=['GET'])
+def getResourcesByCourse(id):
+    resources = models.Resource.query.filter_by(courseId=id).all()
+
+    return render_template('resources.html',resources=resources)
+
 
 @app.route('/createResource', methods=['GET', 'POST'])
 def createResource():
