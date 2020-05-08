@@ -10,9 +10,11 @@
 {% block body %}
 {{ super() }}
 <div class="container" style="margin-top: 5%">
-    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#assignmentModal">
-    Create New Assignment
-</button>
+    <a href={{ url_for('createAssignment',course_id=id) }}>Create Assignment</a>
+
+<!--    <button type="button" class="btn btn-outline-secondary" >-->
+<!--    Create New Assignment-->
+<!--</button>-->
     <table class="table" style = "margin-top: 3%">
         <thead class="thead-dark">
         <tr>

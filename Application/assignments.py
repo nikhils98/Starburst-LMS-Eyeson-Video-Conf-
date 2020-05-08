@@ -11,7 +11,7 @@ PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 
 
 
 # Get list of assignments By Course
-@app.route('/assignments/<id>',methods=['GET'])
+@app.route('/assignments/<id>', methods=['GET'])
 def getAssignmentsByCourse(id):
     assignments = models.Assignment.query.filter_by(courseId=id).all()
 
@@ -21,16 +21,16 @@ def getAssignmentsByCourse(id):
         if ass.course.courseId == int(id):
             filteredAssignments.append(ass)
 
-    return render_template('assignments.html',assignments=filteredAssignments)
+    return render_template('assignments.html', assignments=filteredAssignments)
 
-@app.route('/assignments/detail/<id>',methods=['GET'])
+
+@app.route('/assignments/detail/<id>', methods=['GET'])
 def getAssignmentDetailById(id):
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
     if not assignment:
         flash('Assignment did not exist')
         return redirect('/home')
-    return render_template('assignment.html',assignment=assignment)
-
+    return render_template('assignment.html', assignment=assignment)
 
 
 @app.route('/asssignments/download/<id>', methods=['GET'])
@@ -47,7 +47,8 @@ def downloadAssignment(id):
         assFile = q
         return send_file(assFile.filePath, as_attachment=True)
 
-@app.route('/<course_id>/createAssignment', methods=['GET', 'POST'])
+
+@app.route('/createAssignment/<course_id>/', methods=['GET', 'POST'])
 @authenticate
 def createAssignment(course_id):
     course = models.Course.query.filter_by(courseId=course_id).first()
@@ -110,5 +111,3 @@ def createAssignment(course_id):
         models.db.session.commit()
         flash("Assignment successfully created")
         return render_template('create_assignment_modal.html')
-
-
