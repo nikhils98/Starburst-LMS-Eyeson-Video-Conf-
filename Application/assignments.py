@@ -21,7 +21,7 @@ def getAssignmentsByCourse(id):
         if ass.course.courseId == int(id):
             filteredAssignments.append(ass)
 
-    return render_template('assignments.html', assignments=filteredAssignments)
+    return render_template('assignments.html', assignments=filteredAssignments,id=id)
 
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
