@@ -8,7 +8,8 @@ import os
 RESOURCE_UPLOAD_FOLDER = 'resources'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
-@app.route('/downloadResource',methods=['GET'])
+
+@app.route('/downloadResource', methods=['GET'])
 def downloadResource():
     fileId = request.args.get('id')
     if not fileId:
@@ -20,51 +21,45 @@ def downloadResource():
         return 'no file found'
     else:
         resource = q
-        return send_file(resource.filePath,as_attachment=True)
+        return send_file(resource.filePath, as_attachment=True)
+
 
 # Get list of resources By Course
-@app.route('/resources/<id>',methods=['GET'])
+@app.route('/resources/<id>', methods=['GET'])
 def getResourcesByCourse(id):
     resources = models.Resource.query.filter_by(courseId=id).all()
 
-    return render_template('resources.html',resources=resources, course_id=id)
+    return render_template('resources.html', resources=resources, course_id=id)
 
 
-@app.route('/createResource', methods=['GET', 'POST'])
-def createResource():
-    # making a files directory to keep things tidy. Also easy to add in gitignore
-    if request.method == 'GET':
-        return render_template('create_resource_modal.html')
+@app.route('/createResource/<courseId>', methods=['POST'])
+def createResource(courseId):
+    formData = request.form
+    resourceName = formData['resourceName']
+
+    if resourceName == '':
+        flash('resource fields empty')
+        return render_template('resources.html', isModalOpen=True)
+
+    newResource = models.Resource()
+    newResource.resourceName = resourceName
+    newResource.courseId = courseId
+
+    file = request.files['file']
+    # this is needed to create dir if it doesn't exist, otherwise file.save fails.
+    resourceDir = os.path.join(PROJECT_DIR, RESOURCE_UPLOAD_FOLDER)
+    if not os.path.exists(resourceDir):
+        os.makedirs(resourceDir)
+
+    if file:
+        path = os.path.join(resourceDir, secure_filename(file.filename))
+        file.save(path)
+        newResource.filePath = path
+
+        models.db.session.add(newResource)
+        models.db.session.commit()
+        flash("Resource uploaded")
+        return render_template('resources.html')
     else:
-        formData = request.form
-        resourceName = formData['resourceName']
-
-
-        if resourceName == '':
-            flash('resource fields empty')
-            return render_template('create_resource_modal.html')
-
-        newResource = models.Resource()
-        newResource.resourceName = resourceName
-
-        if "file" not in request.files:
-            flash('Please upload files')
-            return render_template('create_resource_modal.html')
-
-        file = request.files['file']
-        # this is needed to create dir if it doesn't exist, otherwise file.save fails.
-        assignmentDir = os.path.join(PROJECT_DIR, RESOURCE_UPLOAD_FOLDER)
-        if not os.path.exists(assignmentDir):
-            os.makedirs(assignmentDir)
-
-        if file:
-            path = os.path.join(assignmentDir, secure_filename(file.filename))
-            file.save(path)
-            newResource.filePath = path
-
-            models.db.session.add(newResource)
-            models.db.session.commit()
-            return render_template('create_resource_modal.html')
-        else:
-            flash('couldnt upload :(')
-            return render_template('create_resource_modal.html')
+        flash('Please upload a file')
+        return render_template('resources.html', isModalOpen=True, resourceName=resourceName)
