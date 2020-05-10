@@ -42,7 +42,7 @@ def createResource(courseId):
 
     if resourceName == '':
         return render_template('resources.html', err_msg='Resource name cannot be left empty',
-                               course_id=cid, isModalOpen=True)
+                               course_id=cid, show_modal=True)
 
     newResource = models.Resource()
     newResource.resourceName = resourceName
@@ -65,4 +65,4 @@ def createResource(courseId):
         return redirect('/resources/' + cid)
     else:
         return render_template('resources.html', err_msg='Please upload a file',
-                               course_id=cid, isModalOpen=True, resourceName=resourceName)
+                               course_id=cid, show_modal=True, resource_name=resourceName)

@@ -62,9 +62,9 @@
                   action="{{ url_for('createResource',courseId=course_id) }}">
                 <div class="modal-body">
                     <div class="form-group">
-                        {% if resourceName %}
+                        {% if resource_name %}
                         <input type="text" class="form-control" name="resourceName" placeholder="Name"
-                               value={{resourceName}}>
+                               value={{resource_name}}>
                         {% else %}
                         <input type="text" class="form-control" name="resourceName" placeholder="Name">
                         {% endif %}
@@ -83,7 +83,7 @@
     </div>
 </div>
 
-{% if isModalOpen %}
+{% if show_modal %}
 <script>
     $(document).ready(function(){
         $("#resourceModal").modal('show');
