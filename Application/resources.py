@@ -3,6 +3,7 @@ from Application import models
 from flask import request, render_template, redirect, flash, session, send_file
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from markupsafe import escape
 import os
 
 RESOURCE_UPLOAD_FOLDER = 'resources'
@@ -37,13 +38,15 @@ def createResource(courseId):
     formData = request.form
     resourceName = formData['resourceName']
 
+    cid = escape(courseId)
+
     if resourceName == '':
-        flash('resource fields empty')
-        return render_template('resources.html', isModalOpen=True)
+        return render_template('resources.html', err_msg='Resource name cannot be left empty',
+                               course_id=cid, isModalOpen=True)
 
     newResource = models.Resource()
     newResource.resourceName = resourceName
-    newResource.courseId = courseId
+    newResource.courseId = cid
 
     file = request.files['file']
     # this is needed to create dir if it doesn't exist, otherwise file.save fails.
@@ -59,7 +62,7 @@ def createResource(courseId):
         models.db.session.add(newResource)
         models.db.session.commit()
         flash("Resource uploaded")
-        return render_template('resources.html')
+        return redirect('/resources/' + cid)
     else:
-        flash('Please upload a file')
-        return render_template('resources.html', isModalOpen=True, resourceName=resourceName)
+        return render_template('resources.html', err_msg='Please upload a file',
+                               course_id=cid, isModalOpen=True, resourceName=resourceName)
