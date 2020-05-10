@@ -48,7 +48,7 @@ def downloadAssignment(id):
         return send_file(assFile.filePath, as_attachment=True)
 
 
-@app.route('/createAssignment/<course_id>/', methods=['GET', 'POST'])
+@app.route('/createAssignment/<course_id>', methods=['GET', 'POST'])
 @authenticate
 def createAssignment(course_id):
     course = models.Course.query.filter_by(courseId=course_id).first()
@@ -57,7 +57,7 @@ def createAssignment(course_id):
         return redirect('/home')
     # making a files directory to keep things tidy. Also easy to add in gitignore
     if request.method == 'GET':
-        return render_template('create_assignment_modal.html')
+        return render_template('create_assignment_modal.html', course_id=course_id)
     else:
         formData = request.form
         assignmentName = formData['assignmentName']
@@ -70,11 +70,11 @@ def createAssignment(course_id):
             assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
         except ValueError:
             flash('Please enter date time field')
-            return render_template('create_assignment_modal.html')
+            return render_template('create_assignment_modal.html', course_id=course_id)
 
         if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
             flash('assignment fields empty')
-            return render_template('create_assignment_modal.html')
+            return render_template('create_assignment_modal.html', course_id=course_id)
 
         newAssignment = models.Assignment()
         newAssignment.assignmentDesc = assignmentDesc
@@ -110,4 +110,4 @@ def createAssignment(course_id):
 
         models.db.session.commit()
         flash("Assignment successfully created")
-        return render_template('create_assignment_modal.html')
+        return getAssignmentsByCourse(id=course_id)

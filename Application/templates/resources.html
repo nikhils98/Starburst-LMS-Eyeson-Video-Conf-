@@ -9,10 +9,10 @@
 
 {% block body %}
 {{ super() }}
-<div class="container" style="margin-top: 5%">
-    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#ResourceModal">
+<div class="container">
+    <a class="btn btn-outline-secondary" href={{url_for('createResource')}}>
     Create Resource
-</button>
+</a>
     <table class="table" style="margin-top: 5%">
         <thead class="thead-dark">
         <tr>
@@ -35,32 +35,32 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="ResourceModal" tabindex="-1" role="dialog" aria-labelledby="resourceModalTitle"
-     aria-hidden="true">
-    <div class="modal-dialog model-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="resourceModalTitle">Create resource</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form enctype=multipart/form-data method="post">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="resourceName" placeholder="Name">
-                    </div>
-                    <div class="form-group">
-                        <input type="file" name="file">
-                    </div>
+<!--<div class="modal fade" id="ResourceModal" tabindex="-1" role="dialog" aria-labelledby="resourceModalTitle"-->
+<!--     aria-hidden="true">-->
+<!--    <div class="modal-dialog model-lg" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="resourceModalTitle">Create resource</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <form enctype=multipart/form-data method="post">-->
+<!--                <div class="modal-body">-->
+<!--                    <div class="form-group">-->
+<!--                        <input type="text" class="form-control" name="resourceName" placeholder="Name">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <input type="file" name="file">-->
+<!--                    </div>-->
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>-->
+<!--                    <button type="submit" class="btn btn-primary">Create</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 {% endblock %}
