@@ -27,7 +27,7 @@ def downloadResource():
 def getResourcesByCourse(id):
     resources = models.Resource.query.filter_by(courseId=id).all()
 
-    return render_template('resources.html',resources=resources)
+    return render_template('resources.html',resources=resources, course_id=id)
 
 
 @app.route('/createResource', methods=['GET', 'POST'])
