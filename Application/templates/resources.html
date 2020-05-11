@@ -22,15 +22,21 @@
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Created On</th>
-            <th scope="col">Path</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
         {% for resource in resources %}
         <tr>
             <th scope="row">{{resource.resourceName}}</th>
-            <td>{{resource.uploadedDate}}</td>
-            <td>{{resource.filePath}}</td>
+            <td>{{ resource.uploadedDate.strftime('%d-%b-%Y : %I:%M:%S %p') }}</td>
+            <td>
+
+                <a href={{ url_for('downloadResource', id=resource.resourceId) }}>
+                    <i class="material-icons md-36">get_app</i>
+                <a href={{ url_for('deleteResource', courseId=course_id, id=resource.resourceId) }}>
+                    <i class="material-icons md-36" style="color:red;">delete</i>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
