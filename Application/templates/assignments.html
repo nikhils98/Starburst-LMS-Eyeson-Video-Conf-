@@ -22,6 +22,7 @@
             <th scope="col">Marks</th>
             <th scope="col">Open</th>
             <th scope="col">Due</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
 
@@ -30,8 +31,13 @@
         <tr>
             <th scope="row">{{assignment.assignmentName}}</th>
             <td>{{assignment.totalMarks}}</td>
-            <td>{{assignment.uploadDateTime}}</td>
-            <td>{{assignment.assignmentDeadline}}</td>
+            <td>{{assignment.uploadDateTime.strftime("%b %d %Y %r")}}</td>
+            <td>{{assignment.assignmentDeadline.strftime("%b %d %Y %r")}}</td>
+            <td><a class="btn btn-primary" href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}
+                           >View Assignment
+                <i class="material-icons md-48">assignment</i>
+                </a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>

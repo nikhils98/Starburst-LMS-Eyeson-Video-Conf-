@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Submit Assignment</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class="container">
+    <div class="row row-content justify-content-md-center align-self-center">
+        <div class="col-12 col-md-9">
+            <h3>Submit your Assignment</h3><br/>
+        </div>
+        <div class="col-12 col-md-9">
+            <form enctype=multipart/form-data method="post">
+                <div class="form-group row">
+                    <label for="assignmentName" class="col-md-2 col-form-label">Comment</label>
+                    <div class="col-md-10">
+                        <textarea type="input" class="form-control" name="comment"
+                                  placeholder="Add some text with your submission (optional)"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="files" class="col-md-2 col-form-label">Files</label>
+                    <div class="col-md-10">
+                        <input type="file" name="files" id="files" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href={{ url_for('getAssignmentDetailById',id=id) }}>Back</a>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

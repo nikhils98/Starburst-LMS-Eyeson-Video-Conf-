@@ -13,9 +13,22 @@
     <h1>Assignment Submission of {{ submission.user.name }} </h1>
     <p> Submission at: {{ submission.submissionTime  }} </p>
     <p> {{ submission.comment }}</p>
+    <p> Your grade:
+        {% if submission.assignmentGrade is not none  %}
+        {{ submission.assignmentGrade }}
+        {% else %}
+            <em>Not Graded Yet</em>
+        {% endif %}
+    </p>
+
     <p> Submission Files (if any)</p>
     {% for file in submission.submissionFiles %}
     <a href = {{ url_for('downloadSubmission' ,id=file.submissionFileId) }}>{{ file.fileName }}</a>
     <br>
     {% endfor %}
+    <br>
+    <a class="btn btn-warning" href= {{ url_for('gradeAssignmentSubmission',id=submission.assignmentSubmissionId) }}>
+            Grade Assignment
+            <i class="material-icons md-48">check</i>
+    </a>
 {% endblock %}
