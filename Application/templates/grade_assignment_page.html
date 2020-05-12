@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Grade Assignment</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class="container">
+    <div class="row row-content justify-content-md-center align-self-center">
+        <div class="col-12 col-md-9">
+            <h3>Grade this assignment</h3><br/>
+        </div>
+        <div class="col-12 col-md-9">
+            <form enctype=multipart/form-data method="post">
+                 <div class="form-group row">
+                      <label for="assignmentGrade" class="col-md-2 col-form-label">Select Grade Option:</label>
+                     <div class="col-md-10">
+                     <select class="form-control" id="assignmentGrade" name="assignmentGrade">
+                        <option>A</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                          <option>C</option>
+                          <option>F</option>
+                      </select>
+                     </div>
+                    </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href={{ url_for('assignmentSubmissionDetail',id=id) }}>Back</a>
+                    <button type="submit" class="btn btn-primary">Grade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ from sqlalchemy import text
 
 from Application import app, org
 from Application import models
-from flask import request, render_template, redirect, flash, session, send_file
+from flask import request, render_template, redirect, flash, session, send_file, url_for
 from Application.decorators.authenticate import authenticate
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -65,7 +65,7 @@ def downloadSubmission(id):
 @authenticate
 def submitAssignment(id):
     if request.method == "GET":
-        return render_template('submit_assignment_modal.html')
+        return render_template('submit_assignment_page.html',id=id)
     # logic for submission
     formData = request.form
 
@@ -107,15 +107,19 @@ def submitAssignment(id):
 
 @app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])
 def gradeAssignmentSubmission(id):
+    if request.method == "GET":
+        return render_template('grade_assignment_page.html',id=id)
+
     result = models.AssignmentSubmission.query.filter_by(assignmentSubmissionId=id).first()
     if not result:
         flash('Assignment Submission does not exist')
         return redirect('submitAssignment')
 
     formData = request.form
+    print(formData)
     if 'assignmentGrade' not in formData:
         flash('Please send grade')
-        return redirect('submitAssignment')
+        return render_template('grade_assignment_page.html',id=id)
 
     grade = formData['assignmentGrade']
 
@@ -125,7 +129,7 @@ def gradeAssignmentSubmission(id):
     models.db.session.commit()
 
     flash('Graded Assignment')
-    return redirect('submitAssignment')
+    return redirect(url_for('assignmentSubmissionDetail',id=id))
 
 @app.route('/assignmentSubmission/detail/<id>')
 @authenticate
