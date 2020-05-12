@@ -24,11 +24,11 @@ def index():
 
 @app.route('/assignment')
 def assignmentPage():
-    return render_template('assignments.html.')
+    return render_template('assignments.html')
 
 @app.route('/coursesite/<id>')
 @authenticate
 def coursesite(id):
     user_id = session['id']
     # i changed the parameter type because this allows mandatory id passing
-    return render_template('course_page.html.', id=id)
+    return render_template('course_page.html', id=id)
