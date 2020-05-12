@@ -69,7 +69,7 @@ models.db.session.add(course2)
 e1 = models.Enrollment()
 e1.userId = 1
 e1.courseId = 1
-e1.enrollmentRole = models.EnrollmentRole.Student
+e1.enrollmentRole = models.EnrollmentRole.Teacher
 
 e2 = models.Enrollment()
 e2.userId = 1
@@ -94,6 +94,17 @@ assign.totalMarks = 10.5
 assign.uploadDateTime = datetime.datetime.today()
 
 models.db.session.add(assign)
+
+
+assign = models.Assignment()
+assign.courseId = 2
+assign.assignmentDeadline = datetime.datetime.today()
+assign.assignmentDesc = "Lamba sa Research Paper"
+assign.assignmentName = "20000 Word Research Paper"
+assign.totalMarks = 9000
+assign.uploadDateTime = datetime.datetime.today()
+models.db.session.add(assign)
+
 
 sub = models.AssignmentSubmission()
 sub.assignmentId = 1

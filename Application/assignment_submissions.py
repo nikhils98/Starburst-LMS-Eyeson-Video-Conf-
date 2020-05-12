@@ -33,6 +33,8 @@ def assignmentSubmission(id):
     enrollmentRole = [e for e in enrollments if e.userId == session['id']][0].enrollmentRole
     print(enrollmentRole)
 
+    isTeacher = (enrollmentRole == models.EnrollmentRole.Teacher)
+
     submissions = []
 
     if enrollmentRole == models.EnrollmentRole.Teacher:
@@ -47,7 +49,7 @@ def assignmentSubmission(id):
 
     print(submissions)
     return render_template('assignment_submission.html', submissions=submissions,
-                           enrollmentRole=enrollmentRole)
+                           enrollmentRole=enrollmentRole,isTeacher=isTeacher)
 
 @app.route('/downloadSubmission/<id>')
 @authenticate
@@ -102,7 +104,7 @@ def submitAssignment(id):
 
     # after successful submission
     flash("Assignment Submitted")
-    return redirect('submitAssignment')
+    return redirect(url_for('submitAssignment',id=id))
 
 
 @app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])
@@ -113,7 +115,7 @@ def gradeAssignmentSubmission(id):
     result = models.AssignmentSubmission.query.filter_by(assignmentSubmissionId=id).first()
     if not result:
         flash('Assignment Submission does not exist')
-        return redirect('submitAssignment')
+        return redirect(url_for('submitAssignment',id=id))
 
     formData = request.form
     print(formData)
@@ -137,7 +139,9 @@ def assignmentSubmissionDetail(id):
     print(id)
     assignmentSubmissionId = escape(id)
     submission = models.AssignmentSubmission.query.filter_by(assignmentSubmissionId=assignmentSubmissionId).first()
-    return render_template('assignment_submission_detail.html',submission=submission)
+    isTeacher = models.Enrollment.query.filter_by(courseId=submission.assignment.courseId, userId=session[
+        'id']).first().enrollmentRole == models.EnrollmentRole.Teacher
+    return render_template('assignment_submission_detail.html',submission=submission,isTeacher=isTeacher)
 
 
 

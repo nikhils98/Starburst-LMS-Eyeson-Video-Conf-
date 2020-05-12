@@ -27,7 +27,11 @@ def deleteAssignment(id):
 # Get list of assignments By Course
 @app.route('/assignments/<id>', methods=['GET'])
 def getAssignmentsByCourse(id):
+
     assignments = models.Assignment.query.filter_by(courseId=id).all()
+    enrollment = models.Enrollment.query.filter_by(courseId=id,userId=session['id']).first()
+
+    isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
 
     filteredAssignments = []
 
@@ -35,16 +39,21 @@ def getAssignmentsByCourse(id):
         if ass.course.courseId == int(id):
             filteredAssignments.append(ass)
 
-    return render_template('assignments.html', assignments=filteredAssignments, id=id)
+    return render_template('assignments.html', assignments=filteredAssignments, id=id, isTeacher=isTeacher)
 
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
 def getAssignmentDetailById(id):
+
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
+
+
     if not assignment:
         flash('Assignment did not exist')
         return redirect('/home')
-    return render_template('assignment.html', assignment=assignment)
+
+    isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId,userId=session['id']).first().enrollmentRole == models.EnrollmentRole.Teacher
+    return render_template('assignment.html', assignment=assignment,isTeacher=isTeacher)
 
 
 @app.route('/asssignments/download/<id>', methods=['GET'])
