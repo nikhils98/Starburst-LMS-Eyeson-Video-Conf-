@@ -9,6 +9,7 @@ import os
 ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
+
 @app.route('/assignments/delete/<id>')
 def deleteAssignment(id):
     if not id:
@@ -35,7 +36,7 @@ def getAssignmentsByCourse(id):
         if ass.course.courseId == int(id):
             filteredAssignments.append(ass)
 
-    return render_template('assignments.html', assignments=filteredAssignments, id=id)
+    return render_template('assignments.html', assignments=filteredAssignments, course_id=id)
 
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
@@ -69,6 +70,13 @@ def createAssignment(course_id):
     if not course:
         flash('No Course for this to create Assignment')
         return redirect('/home')
+
+    assignments = models.Assignment.query.filter_by(courseId=course_id).all()
+    filteredAssignments = []
+    for ass in assignments:
+        if ass.course.courseId == int(course_id):
+            filteredAssignments.append(ass)
+
     # making a files directory to keep things tidy. Also easy to add in gitignore
     if request.method == 'GET':
         return render_template('create_assignment_page.html', course_id=course_id)
@@ -79,16 +87,27 @@ def createAssignment(course_id):
         totalMarks = formData['totalMarks']
 
         print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
+        if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
+            #flash('assignment fields empty')
+            return render_template('assignments.html', course_id=course_id,
+                                   assignments=filteredAssignments,
+                                   err_msg='Fields cannot be left empty',
+                                   assignment_name=assignmentName,
+                                   assignment_desc=assignmentDesc,
+                                   total_marks=totalMarks,
+                                   show_modal=True)
         # We need to include time here as well. When u change it to that: DONE
         try:
             assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
         except ValueError:
-            flash('Please enter date time field')
-            return render_template('create_assignment_page.html', course_id=course_id)
-
-        if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
-            flash('assignment fields empty')
-            return render_template('create_assignment_page.html', course_id=course_id)
+            #flash('Please enter date time field')
+            return render_template('assignments.html', course_id=course_id,
+                                   err_msg='Assignment Due Date must not be empty. ',
+                                   assignments=filteredAssignments,
+                                   assignment_name=assignmentName,
+                                   assignment_desc=assignmentDesc,
+                                   total_marks=totalMarks,
+                                   show_modal=True)
 
         newAssignment = models.Assignment()
         newAssignment.assignmentDesc = assignmentDesc
@@ -125,6 +144,7 @@ def createAssignment(course_id):
         models.db.session.commit()
         flash("Assignment successfully created")
         return getAssignmentsByCourse(id=course_id)
+
 
 @app.route('/updateAssignment/<id>', methods=['GET', 'POST'])
 @authenticate

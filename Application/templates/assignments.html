@@ -10,8 +10,10 @@
 {% block body %}
 {{ super() }}
 <div class="container" style="margin-top: 5%">
-    <a class="btn btn-secondary" href={{ url_for('createAssignment',course_id=id) }}>Create Assignment</a>
-
+    {# <a class="btn btn-secondary" href={{ url_for('createAssignment',course_id=course_id) }}>Create Assignment</a> #}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assignmentModal">
+        Create Assignment
+    </button>
     <!--    <button type="button" class="btn btn-outline-secondary" >-->
     <!--    Create New Assignment-->
     <!--</button>-->
@@ -34,14 +36,14 @@
             <td>{{assignment.uploadDateTime.strftime("%b %d %Y %r")}}</td>
             <td>{{assignment.assignmentDeadline.strftime("%b %d %Y %r")}}</td>
             <td><a href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}
-                           >
+                >
                 <i class="material-icons md-48" style="color:blue;">visibility</i>
                 </a>
                 <a href={{ url_for('deleteAssignment', id=assignment.assignmentId) }}>
-                    <i class="material-icons md-36" style="color:red;">delete</i>
+                <i class="material-icons md-36" style="color:red;">delete</i>
                 </a>
                 <a href={{ url_for('updateAssignment', id=assignment.assignmentId) }}>
-                    <i class="material-icons md-36" style="color:green;">edit</i>
+                <i class="material-icons md-36" style="color:green;">edit</i>
                 </a>
             </td>
         </tr>
@@ -50,19 +52,88 @@
 
     </table>
     <br>
-    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=id) }}> Back</a>
+    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}> Back</a>
 
     <div class="row">
+    </div>
+</div>
+
+<div class="modal fade" id="assignmentModal" tabindex="-1" role="dialog"
+     aria-labelledby="assignmentModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignmentModalTitle">Create Assignment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% if err_msg %}
+            <div>
+                <div class="alert alert-info" role="alert">
+                    {{err_msg}}
+                </div>
+            </div>
+            {% endif %}
+            <form enctype=multipart/form-data method="post"
+                  action="{{ url_for('createAssignment',course_id=course_id) }}">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="assignmentName" class="col-md-2 col-form-label">Title</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="assignmentName" name="assignmentName"
+                                   placeholder="Title" value={{assignment_name}}>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="totalMarks" class="col-md-2 col-form-label">Total Marks</label>
+                        <div class="col-md-10">
+                            <input type="number" step="0.1" min="0" class="form-control" id="totalMarks"
+                                   name="totalMarks"
+                                   placeholder="Total Marks" value={{total_marks}}>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="datetimepicker" class="col-md-2 col-form-label">Due Date</label>
+                        <div class="col-md-10">
+                            <input type="text" id="datetimepicker" class="form-control"
+                                   name="assignmentDeadline"
+                                   placeholder="Due Date" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="files" class="col-md-2 col-form-label">Files</label>
+                        <div class="col-md-10">
+                            <input type="file" name="files" id="files" multiple>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="assignmentDesc" class="col-md-2 col-form-label">Description</label>
+                        <div class="col-md-10">
+                        <textarea type="input" class="form-control" id="assignmentDesc" name="assignmentDesc"
+                                  placeholder="Description">{{assignment_desc}}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {# <a class="btn btn-primary" href={{url_for('getAssignmentsByCourse' ,id=course_id) }}>Back</a>#}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <script>
     $.datetimepicker.setLocale('en');
     $('#datetimepicker').datetimepicker();
-
-
-
-
-
-
 </script>
+{% if show_modal %}
+<script>
+     $(document).ready(function(){
+        $("#assignmentModal").modal('show');
+    });
+</script>
+{% endif %}
 {% endblock %}
