@@ -33,9 +33,15 @@
             <td>{{assignment.totalMarks}}</td>
             <td>{{assignment.uploadDateTime.strftime("%b %d %Y %r")}}</td>
             <td>{{assignment.assignmentDeadline.strftime("%b %d %Y %r")}}</td>
-            <td><a class="btn btn-primary" href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}
-                           >View Assignment
-                <i class="material-icons md-48">assignment</i>
+            <td><a href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}
+                           >
+                <i class="material-icons md-48" style="color:blue;">visibility</i>
+                </a>
+                <a href={{ url_for('deleteAssignment', id=assignment.assignmentId) }}>
+                    <i class="material-icons md-36" style="color:red;">delete</i>
+                </a>
+                <a href={{ url_for('updateAssignment', id=assignment.assignmentId) }}>
+                    <i class="material-icons md-36" style="color:green;">edit</i>
                 </a>
             </td>
         </tr>

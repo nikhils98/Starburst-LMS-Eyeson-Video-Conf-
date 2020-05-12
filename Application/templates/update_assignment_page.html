@@ -1,0 +1,65 @@
+{% extends 'main.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Update Assignment</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class="container">
+    <div class="row row-content justify-content-md-center align-self-center">
+        <div class="col-12 col-md-9">
+            <h3>Update your Assignment</h3><br/>
+        </div>
+        <div class="col-12 col-md-9">
+            <form enctype=multipart/form-data method="post">
+                <div class="form-group row">
+                    <label for="assignmentName" class="col-md-2 col-form-label">Title</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="assignmentName" name="assignmentName"
+                               value={{ assignment.assignmentName }}>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="totalMarks" class="col-md-2 col-form-label">Total Marks</label>
+                    <div class="col-md-10">
+                        <input type="number" step="0.1" min="0" class="form-control" id="totalMarks" name="totalMarks"
+                               value={{ assignment.totalMarks }}>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="datetimepicker" class="col-md-2 col-form-label">Due Date</label>
+                    <div class="col-md-10">
+                        <input type="text" id="datetimepicker" class="form-control"
+                               name="assignmentDeadline"
+                               value={{ assignment.assignmentDeadline.strftime('%Y/%m/%d %H:%M') }} autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="files" class="col-md-2 col-form-label">Files</label>
+                    <div class="col-md-10">
+                        <input type="file" name="files" id="files" multiple>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="assignmentDesc" class="col-md-2 col-form-label">Description</label>
+                    <div class="col-md-10">
+                        <textarea type="input" class="form-control" id="assignmentDesc" name="assignmentDesc"
+                                 value={{ assignment.assignmentDesc }}></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href={{url_for('getAssignmentsByCourse' ,id=course_id) }}>Back</a>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.datetimepicker.setLocale('en');
+    $('#datetimepicker').datetimepicker();
+</script>
+{% endblock %}

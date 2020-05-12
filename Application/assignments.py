@@ -9,6 +9,20 @@ import os
 ASSIGNMENT_UPLOAD_FOLDER = 'assignments'
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', str(org.orgId))
 
+@app.route('/assignments/delete/<id>')
+def deleteAssignment(id):
+    if not id:
+        flash("Assignment id is missing")
+        return redirect('/home')
+    else:
+        ass = models.Assignment.query.filter_by(assignmentId=id).one()
+        cid = str(ass.course.courseId)
+        models.db.session.delete(ass)
+        models.db.session.commit()
+        flash("Successfully Deleted")
+
+    return redirect('/assignments/' + cid)
+
 
 # Get list of assignments By Course
 @app.route('/assignments/<id>', methods=['GET'])
@@ -111,3 +125,65 @@ def createAssignment(course_id):
         models.db.session.commit()
         flash("Assignment successfully created")
         return getAssignmentsByCourse(id=course_id)
+
+@app.route('/updateAssignment/<id>', methods=['GET', 'POST'])
+@authenticate
+def updateAssignment(id):
+    assignment = models.Assignment.query.filter_by(assignmentId=id).first()
+    if not assignment:
+        flash('No Assignment for this to update Assignment')
+        return redirect('/home')
+    # making a files directory to keep things tidy. Also easy to add in gitignore
+    if request.method == 'GET':
+        return render_template('update_assignment_page.html', assignment=assignment)
+    else:
+        formData = request.form
+        assignmentName = formData['assignmentName']
+        assignmentDesc = formData['assignmentDesc']
+        totalMarks = formData['totalMarks']
+
+        print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
+        # We need to include time here as well. When u change it to that: DONE
+        try:
+            assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
+        except ValueError:
+            flash('Please enter date time field')
+            return render_template('update_assignment_page.html', assignment=assignment)
+
+        if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
+            flash('assignment fields empty')
+            return render_template('update_assignment_page.html', assignment=assignment)
+
+        assignment.assignmentDesc = assignmentDesc
+        assignment.assignmentName = assignmentName
+        assignment.assignmentDeadline = assignmentDeadline
+        assignment.uploadDateTime = datetime.today()
+        assignment.totalMarks = float(totalMarks)
+
+        # to get the assignmentId. Unlike commit, flush kinda communicates the changes
+        # to db but they're not persisted in disk. Commit ensures data is written to disk
+        models.db.session.add(assignment)
+        models.db.session.flush()
+
+        files = request.files.getlist("files")
+
+        # this is needed to create dir if it doesn't exist, otherwise file.save fails.
+        assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER, str(assignment.assignmentId))
+
+        for file in files:
+            # for some reason when not uploading any file it was still reaching this code
+            # with an empty file so I included this check for now
+            if file:
+                if not os.path.exists(assignmentDir):
+                    os.makedirs(assignmentDir)
+                path = os.path.join(assignmentDir, secure_filename(file.filename))
+                file.save(path)
+                newAssignmentFile = models.AssignmentFile()
+                newAssignmentFile.filePath = path
+                newAssignmentFile.assignmentId = assignment.assignmentId
+                newAssignmentFile.fileName = file.filename
+                models.db.session.add(newAssignmentFile)
+
+        models.db.session.commit()
+        flash("Assignment successfully created")
+        return getAssignmentsByCourse(id=assignment.courseId)
