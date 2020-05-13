@@ -44,9 +44,10 @@ def createResource(courseId):
 
 
     cid = escape(courseId)
+    resources = models.Resource.query.filter_by(courseId=cid).all()
 
     if resourceName == '':
-        return render_template('resources.html', err_msg='Resource name cannot be left empty',
+        return render_template('resources.html', resources=resources, err_msg='Resource name cannot be left empty',
                                course_id=cid, show_modal=True)
 
     newResource = models.Resource()
@@ -69,8 +70,9 @@ def createResource(courseId):
         flash("Resource uploaded")
         return redirect('/resources/' + cid)
     else:
-        return render_template('resources.html', err_msg='Please upload a file',
+        return render_template('resources.html', resources=resources, err_msg='Please upload a file',
                                course_id=cid, show_modal=True, resource_name=resourceName)
+
 
 @app.route('/deleteResource/<courseId>/<id>', methods=["GET"])
 @authenticate
