@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Meetings</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<button id="recording-btn"><a href={{ url_for('createMeeting') }}>Create room</button>
+<div id="content">
+    {% if room %}
+    <textarea rows="20" cols="200">{{room}}</textarea>
+    {% endif %}
+</div>
+{% endblock %}
