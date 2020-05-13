@@ -27,8 +27,10 @@
     <br>
     {% endfor %}
     <br>
+    {% if isTeacher %}
     <a class="btn btn-warning" href= {{ url_for('gradeAssignmentSubmission',id=submission.assignmentSubmissionId) }}>
             Grade Assignment
             <i class="material-icons md-48">check</i>
     </a>
+    {% endif %}
 {% endblock %}
