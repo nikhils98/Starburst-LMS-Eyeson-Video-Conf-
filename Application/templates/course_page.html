@@ -9,7 +9,8 @@
 
 {% block body %}
 {{ super() }}
-<div class="container" style="margin-top: 5%">
+<div class="container" style="margin-top: 3%;">
+    <a class="btn btn-secondary" style="margin-bottom: 3%;" href={{url_for('login')}}>Back</a>
     <div class="row row-cols-3">
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
@@ -47,7 +48,6 @@
         </div>
     </div>
     <br>
-    <a class="btn btn-secondary" href={{url_for('login')}}>Back</a>
 
 </div>
 

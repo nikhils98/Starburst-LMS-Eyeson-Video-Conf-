@@ -9,7 +9,8 @@
 
 {% block body %}
 {{ super() }}
-
+<div class="container" style="margin-top:3%;">
+    <a class="btn btn-secondary" href={{url_for('getAssignmentDetailById' ,id=assignmentId) }}>Back</a>
     <div class="page-header">
     <h1>Assignment Submissions so far</h1>
     </div>
@@ -24,7 +25,7 @@
 
         <tbody>
         {% for submission in submissions %}
-        <tr>
+        <tr class="border">
             <th scope="row">{{submission.user.name}}</th>
             <td>{{submission.submissionTime.strftime("%b %d %Y %r")}}</td>
             <td><a href={{ url_for('assignmentSubmissionDetail',id=submission.assignmentSubmissionId) }}
@@ -44,5 +45,5 @@
         {% endfor %}
         </tbody>
         </table>
-    <a class="btn btn-secondary" href={{url_for('getAssignmentDetailById' ,id=assignmentId) }}>Back</a>
+</div>
 {% endblock %}

@@ -9,12 +9,10 @@
 
 {% block body %}
 {{ super() }}
-<div class="container" style="margin-top: 5%">
-    {#<a class="btn btn-secondary" href={{url_for('createResource')}}>
-    Create Resource
-</a>#}
+<div class="container" style="margin-top: 3%">
+    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}> Back</a>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resourceModal">
+    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#resourceModal">
         Create Resource
     </button>
     <table class="table" style="margin-top: 5%">
@@ -27,7 +25,7 @@
         </thead>
         <tbody>
         {% for resource in resources %}
-        <tr>
+        <tr class="border">
             <th scope="row">{{resource.resourceName}}</th>
             <td>{{ resource.uploadedDate.strftime('%d-%b-%Y : %I:%M:%S %p') }}</td>
             <td>
@@ -43,7 +41,6 @@
 
     </table>
     <br>
-    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}> Back</a>
 </div>
 
 <!-- Modal -->

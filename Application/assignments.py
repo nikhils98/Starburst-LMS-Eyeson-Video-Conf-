@@ -28,9 +28,8 @@ def deleteAssignment(id):
 # Get list of assignments By Course
 @app.route('/assignments/<id>', methods=['GET'])
 def getAssignmentsByCourse(id):
-
     assignments = models.Assignment.query.filter_by(courseId=id).all()
-    enrollment = models.Enrollment.query.filter_by(courseId=id,userId=session['id']).first()
+    enrollment = models.Enrollment.query.filter_by(courseId=id, userId=session['id']).first()
 
     isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
 
@@ -45,15 +44,15 @@ def getAssignmentsByCourse(id):
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
 def getAssignmentDetailById(id):
-
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
 
     if not assignment:
         flash('Assignment did not exist')
         return redirect('/home')
 
-    isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId,userId=session['id']).first().enrollmentRole == models.EnrollmentRole.Teacher
-    return render_template('assignment.html', assignment=assignment,isTeacher=isTeacher)
+    isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId, userId=session[
+        'id']).first().enrollmentRole == models.EnrollmentRole.Teacher
+    return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher)
 
 
 @app.route('/asssignments/download/<id>', methods=['GET'])
@@ -85,73 +84,69 @@ def createAssignment(course_id):
         if ass.course.courseId == int(course_id):
             filteredAssignments.append(ass)
 
-    # making a files directory to keep things tidy. Also easy to add in gitignore
-    if request.method == 'GET':
-        return render_template('create_assignment_page.html', course_id=course_id)
-    else:
-        formData = request.form
-        assignmentName = formData['assignmentName']
-        assignmentDesc = formData['assignmentDesc']
-        totalMarks = formData['totalMarks']
+    formData = request.form
+    assignmentName = formData['assignmentName']
+    assignmentDesc = formData['assignmentDesc']
+    totalMarks = formData['totalMarks']
 
-        print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
-        if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
-            #flash('assignment fields empty')
-            return render_template('assignments.html', course_id=course_id,
-                                   assignments=filteredAssignments,
-                                   err_msg='Fields cannot be left empty',
-                                   assignment_name=assignmentName,
-                                   assignment_desc=assignmentDesc,
-                                   total_marks=totalMarks,
-                                   show_modal=True)
-        # We need to include time here as well. When u change it to that: DONE
-        try:
-            assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
-        except ValueError:
-            #flash('Please enter date time field')
-            return render_template('assignments.html', course_id=course_id,
-                                   err_msg='Assignment Due Date must not be empty. ',
-                                   assignments=filteredAssignments,
-                                   assignment_name=assignmentName,
-                                   assignment_desc=assignmentDesc,
-                                   total_marks=totalMarks,
-                                   show_modal=True)
+    print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
+    if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
+        # flash('assignment fields empty')
+        return render_template('assignments.html', course_id=course_id,
+                               assignments=filteredAssignments,
+                               err_msg='Fields cannot be left empty',
+                               assignment_name=assignmentName,
+                               assignment_desc=assignmentDesc,
+                               total_marks=totalMarks,
+                               show_modal=True)
+    # We need to include time here as well. When u change it to that: DONE
+    try:
+        assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
+    except ValueError:
+        # flash('Please enter date time field')
+        return render_template('assignments.html', course_id=course_id,
+                               err_msg='Assignment Due Date must not be empty. ',
+                               assignments=filteredAssignments,
+                               assignment_name=assignmentName,
+                               assignment_desc=assignmentDesc,
+                               total_marks=totalMarks,
+                               show_modal=True)
 
-        newAssignment = models.Assignment()
-        newAssignment.assignmentDesc = assignmentDesc
-        newAssignment.assignmentName = assignmentName
-        newAssignment.assignmentDeadline = assignmentDeadline
-        newAssignment.uploadDateTime = datetime.today()
-        newAssignment.totalMarks = float(totalMarks)
-        newAssignment.courseId = course.courseId
+    newAssignment = models.Assignment()
+    newAssignment.assignmentDesc = assignmentDesc
+    newAssignment.assignmentName = assignmentName
+    newAssignment.assignmentDeadline = assignmentDeadline
+    newAssignment.uploadDateTime = datetime.today()
+    newAssignment.totalMarks = float(totalMarks)
+    newAssignment.courseId = course.courseId
 
-        # to get the assignmentId. Unlike commit, flush kinda communicates the changes
-        # to db but they're not persisted in disk. Commit ensures data is written to disk
-        models.db.session.add(newAssignment)
-        models.db.session.flush()
+    # to get the assignmentId. Unlike commit, flush kinda communicates the changes
+    # to db but they're not persisted in disk. Commit ensures data is written to disk
+    models.db.session.add(newAssignment)
+    models.db.session.flush()
 
-        files = request.files.getlist("files")
+    files = request.files.getlist("files")
 
-        # this is needed to create dir if it doesn't exist, otherwise file.save fails.
-        assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER, str(newAssignment.assignmentId))
+    # this is needed to create dir if it doesn't exist, otherwise file.save fails.
+    assignmentDir = os.path.join(PROJECT_DIR, ASSIGNMENT_UPLOAD_FOLDER, str(newAssignment.assignmentId))
 
-        for file in files:
-            # for some reason when not uploading any file it was still reaching this code
-            # with an empty file so I included this check for now
-            if file:
-                if not os.path.exists(assignmentDir):
-                    os.makedirs(assignmentDir)
-                path = os.path.join(assignmentDir, secure_filename(file.filename))
-                file.save(path)
-                newAssignmentFile = models.AssignmentFile()
-                newAssignmentFile.filePath = path
-                newAssignmentFile.assignmentId = newAssignment.assignmentId
-                newAssignmentFile.fileName = file.filename
-                models.db.session.add(newAssignmentFile)
+    for file in files:
+        # for some reason when not uploading any file it was still reaching this code
+        # with an empty file so I included this check for now
+        if file:
+            if not os.path.exists(assignmentDir):
+                os.makedirs(assignmentDir)
+            path = os.path.join(assignmentDir, secure_filename(file.filename))
+            file.save(path)
+            newAssignmentFile = models.AssignmentFile()
+            newAssignmentFile.filePath = path
+            newAssignmentFile.assignmentId = newAssignment.assignmentId
+            newAssignmentFile.fileName = file.filename
+            models.db.session.add(newAssignmentFile)
 
-        models.db.session.commit()
-        flash("Assignment successfully created")
-        return getAssignmentsByCourse(id=course_id)
+    models.db.session.commit()
+    flash("Assignment successfully created")
+    return getAssignmentsByCourse(id=course_id)
 
 
 @app.route('/updateAssignment/<id>', methods=['GET', 'POST'])

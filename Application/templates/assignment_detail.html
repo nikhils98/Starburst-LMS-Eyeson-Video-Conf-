@@ -10,9 +10,10 @@
 {% block body %}
 {{ super() }}
 
-<div class="container" style="margin-top: 5%">
+<div class="container" style="margin-top: 3%">
+    <a class="btn btn-secondary" href={{url_for('getAssignmentsByCourse' ,id=assignment.courseId) }}>Back</a>
     <div class="page-header">
-      <h1>Assignment: {{ assignment.assignmentName }}<small> ({{ assignment.course.courseName }})</small></h1>
+      <h2>Assignment: {{ assignment.assignmentName }}<small> ({{ assignment.course.courseName }})</small></h2>
     </div>
     <div>
         <h4>Assignment Description:</h4>
@@ -46,7 +47,6 @@
         <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
             View Submissions so far
         </a>
-        <a class="btn btn-secondary" href={{url_for('getAssignmentsByCourse' ,id=assignment.courseId) }}>Back</a>
     </div>
 </div>
 

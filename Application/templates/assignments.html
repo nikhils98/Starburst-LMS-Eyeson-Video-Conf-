@@ -9,14 +9,13 @@
 
 {% block body %}
 {{ super() }}
-<div class="container" style="margin-top: 5%">
+<div class="container" style="margin-top: 3%">
+        <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}>Back</a>
     {% if isTeacher %}
-    <a class="btn btn-secondary" href={{ url_for('createAssignment',course_id=id) }}>Create Assignment</a>
+        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#assignmentModal">
+            Create Assignment
+        </button>
     {% endif %}
-    {# <a class="btn btn-secondary" href={{ url_for('createAssignment',course_id=course_id) }}>Create Assignment</a> #}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assignmentModal">
-        Create Assignment
-    </button>
     <table class="table" style="margin-top: 3%">
         <thead class="thead-dark">
         <tr>
@@ -30,7 +29,7 @@
 
         <tbody>
         {% for assignment in assignments %}
-        <tr>
+        <tr class="border">
             <th scope="row">{{assignment.assignmentName}}</th>
             <td>{{assignment.totalMarks}}</td>
             <td>{{assignment.uploadDateTime.strftime("%b %d %Y %r")}}</td>
@@ -54,7 +53,6 @@
 
     </table>
     <br>
-    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}> Back</a>
 
     <div class="row">
     </div>
