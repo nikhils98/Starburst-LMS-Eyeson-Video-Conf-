@@ -9,28 +9,45 @@
 
 {% block body %}
 {{ super() }}
-
+    <div class="mx-auto" style="width: 800px;" >
     <h1>Assignment Submission of {{ submission.user.name }} </h1>
-    <p> Submission at: {{ submission.submissionTime  }} </p>
-    <p> {{ submission.comment }}</p>
-    <p> Your grade:
+    <blockquote class="blockquote">
+    <p class="mb-0">Submitted at: <em>{{ submission.submissionTime.strftime("%b %d %Y %r")  }}</em></p>
+    </blockquote>
+    <blockquote class="blockquote">
+    <p class="mb-0">Grade:
         {% if submission.assignmentGrade is not none  %}
-        {{ submission.assignmentGrade }}
+        <em>{{ submission.assignmentGrade }}</em>
         {% else %}
             <em>Not Graded Yet</em>
         {% endif %}
     </p>
-
-    <p> Submission Files (if any)</p>
-    {% for file in submission.submissionFiles %}
-    <a href = {{ url_for('downloadSubmission' ,id=file.submissionFileId) }}>{{ file.fileName }}</a>
+    </blockquote>
+    <h4>Your Assignment Text:</h4>
+    <div class="card">
+      <div class="card-body">
+          {{ submission.comment }}
+      </div>
+    </div>
     <br>
+    {% if submission.submissionFiles|length >= 1 %}
+    <h4> Submission Files (if any) [Click to 💾]</h4>
+    <div class="list-group">
+    {% for file in submission.submissionFiles %}
+        <a class="list-group-item list-group-item-action" href = {{ url_for('downloadSubmission' ,id=file.submissionFileId) }}>{{ file.fileName }}</a>
+    </div>
     {% endfor %}
+    {% else %}
+            <h4> No Submission Files</h4>
+    {% endif %}
+
     <br>
     {% if isTeacher %}
     <a class="btn btn-warning" href= {{ url_for('gradeAssignmentSubmission',id=submission.assignmentSubmissionId) }}>
             Grade Assignment
-            <i class="material-icons md-48">check</i>
     </a>
+    <br><br>
     {% endif %}
+        <a class="btn btn-secondary" href={{url_for('assignmentSubmission' ,id=submission.assignmentId) }}>Back</a>
+    </div>
 {% endblock %}

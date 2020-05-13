@@ -11,22 +11,32 @@
 {{ super() }}
 
 <div class="container" style="margin-top: 5%">
-    <h1>Assignment: {{ assignment.assignmentName }}</h1>
+    <div class="page-header">
+      <h1>Assignment: {{ assignment.assignmentName }}<small> ({{ assignment.course.courseName }})</small></h1>
+    </div>
     <div>
-        <p><b>Assignment Description:</b> {{ assignment.assignmentDesc }}</p>
+        <h4>Assignment Description:</h4>
+            <div class="card">
+      <div class="card-body">
+          {{assignment.assignmentDesc }}
+      </div>
+            </div>
         <br>
-        <p><b>Assignment Deadline:</b> {{ assignment.assignmentDeadline.strftime('%d-%b-%Y : %I:%M:%S %p') }}</p>
+        <h5>Assignment Deadline: <em>{{ assignment.assignmentDeadline.strftime('%d-%b-%Y : %I:%M:%S %p') }}</em></h5>
+        <h5>Total Marks: <em>{{ assignment.totalMarks }}</em></h5>
+        <h5>Assignment Uploaded Date:<em>{{ assignment.uploadDateTime.strftime('%d-%b-%Y : %I:%M:%S %p') }}</em></h5>
         <br>
-        <p><b>Total Marks:</b> {{ assignment.totalMarks }}</p>
+        {% if assignment.assignmentFiles|length >= 1 %}
+        <h4>Assignment Files (if any) [Click to 💾]</h4>
+               <div class="list-group">
+                {% for file in assignment.assignmentFiles %}
+                    <a class="list-group-item list-group-item-action" href = {{ url_for('downloadAssignment' ,id=file.assignmentFileId)}}>{{ file.fileName }}</a>
+                {% endfor %}
+                </div>
         <br>
-        <p><b>Assignment Uploaded Date:</b> {{ assignment.uploadDateTime.strftime('%d-%b-%Y : %I:%M:%S %p') }}</p>
-        <br>
-        <p><b>Assignment Files (if any) :</b></p>
-        {%  for file in assignment.assignmentFiles %}
-                <a href = {{ url_for('downloadAssignment' ,id=file.assignmentFileId) }}>{{ file.fileName }}</a>
-                <br>
-        {% endfor %}
-        <br>
+            {% else %}
+            <h4>No Assignment Files</h4>
+        {% endif %}
         {% if not isTeacher %}
         <a class="btn btn-primary" href={{ url_for('submitAssignment',id=assignment.assignmentId) }}>
             Submit Assignment
@@ -35,8 +45,8 @@
         {% endif %}
         <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
             View Submissions so far
-            <i class="material-icons md-48">visibility</i>
         </a>
+        <a class="btn btn-secondary" href={{url_for('getAssignmentsByCourse' ,id=assignment.courseId) }}>Back</a>
     </div>
 </div>
 
