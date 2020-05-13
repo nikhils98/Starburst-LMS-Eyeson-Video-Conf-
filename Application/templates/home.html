@@ -17,7 +17,7 @@
     </div>
     <div class="row row-cols-3" style = "margin-top: 3%">
         {% for c in courses %}
-        <div class="col">
+        <div class="col" style="margin-bottom:3%">
             <div class="card text-center" style="cursor: pointer">
                 <a href={{ url_for('coursesite' ,id=c.courseId) }}>
                 <img src="../static/img/default_course_cover.jpg" class="card-img-top" alt="..."

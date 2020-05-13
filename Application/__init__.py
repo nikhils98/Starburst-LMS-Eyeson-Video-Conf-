@@ -31,7 +31,7 @@ org.orgName = 'IBA'
 models.db.session.add(org)
 
 user = models.User()
-user.name = 'nikhil'
+user.name = 'Nikhil Satiani'
 user.email = 'nikhil.satiani@gmail.com'
 user.password = hashlib.md5('nikhil'.encode()).hexdigest()
 user.userRole = models.UserRole.User
@@ -39,11 +39,8 @@ user.orgId = 1
 
 models.db.session.add(user)
 
-models.db.session.commit()
-
-
 user = models.User()
-user.name = 'sualeh'
+user.name = 'Sualeh Ali'
 user.email = 'sualeh.ali@gmail.com'
 user.password = hashlib.md5('sualeh'.encode()).hexdigest()
 user.userRole = models.UserRole.User
@@ -51,72 +48,103 @@ user.orgId = 1
 
 models.db.session.add(user)
 
-course1 = models.Course()
-course1.courseName = 'SPM'
-course1.courseDesc = 'Good course'
-course1.courseSemester = 'Spring'
-course1.courseYear = '2020'
+course = models.Course()
+course.courseName = 'SPM'
+course.courseDesc = 'This is course description'
+course.courseSemester = 'Spring'
+course.courseYear = '2020'
 
-course2 = models.Course()
-course2.courseName = 'Pol Sci'
-course2.courseDesc = 'Good course'
-course2.courseSemester = 'Spring'
-course2.courseYear = '2020'
+models.db.session.add(course)
 
-models.db.session.add(course1)
-models.db.session.add(course2)
+course = models.Course()
+course.courseName = 'Intro to Political Science'
+course.courseDesc = 'Description'
+course.courseSemester = 'Spring'
+course.courseYear = '2020'
 
-e1 = models.Enrollment()
-e1.userId = 1
-e1.courseId = 1
-e1.enrollmentRole = models.EnrollmentRole.Teacher
+models.db.session.add(course)
 
-e2 = models.Enrollment()
-e2.userId = 1
-e2.courseId = 2
-e2.enrollmentRole = models.EnrollmentRole.Student
+course = models.Course()
+course.courseName = 'Distributed Systems'
+course.courseDesc = 'Description'
+course.courseSemester = 'Spring'
+course.courseYear = '2020'
 
-e3 = models.Enrollment()
-e3.userId = 2
-e3.courseId = 1
-e3.enrollmentRole = models.EnrollmentRole.Student
+models.db.session.add(course)
 
-models.db.session.add(e1)
-models.db.session.add(e2)
-models.db.session.add(e3)
+course = models.Course()
+course.courseName = 'Audit'
+course.courseDesc = 'Description'
+course.courseSemester = 'Spring'
+course.courseYear = '2020'
+
+models.db.session.add(course)
+
+enroll = models.Enrollment()
+enroll.userId = 1
+enroll.courseId = 1
+enroll.enrollmentRole = models.EnrollmentRole.Teacher
+
+models.db.session.add(enroll)
+
+enroll = models.Enrollment()
+enroll.userId = 2
+enroll.courseId = 1
+enroll.enrollmentRole = models.EnrollmentRole.Student
+
+models.db.session.add(enroll)
+
+enroll = models.Enrollment()
+enroll.userId = 2
+enroll.courseId = 2
+enroll.enrollmentRole = models.EnrollmentRole.Student
+
+models.db.session.add(enroll)
+
+enroll = models.Enrollment()
+enroll.userId = 2
+enroll.courseId = 3
+enroll.enrollmentRole = models.EnrollmentRole.Student
+
+models.db.session.add(enroll)
+
+enroll = models.Enrollment()
+enroll.userId = 2
+enroll.courseId = 4
+enroll.enrollmentRole = models.EnrollmentRole.Student
+
+models.db.session.add(enroll)
 
 assign = models.Assignment()
 assign.courseId = 1
-assign.assignmentDeadline = datetime.datetime.today()
-assign.assignmentDesc = "krle bhai"
-assign.assignmentName = "testing"
-assign.totalMarks = 10.5
+assign.assignmentDeadline = datetime.datetime.today() + datetime.timedelta(days=5)
+assign.assignmentDesc = "This is assignment description"
+assign.assignmentName = "Iron Triangle"
+assign.totalMarks = 10
 assign.uploadDateTime = datetime.datetime.today()
 
 models.db.session.add(assign)
-
 
 assign = models.Assignment()
 assign.courseId = 2
-assign.assignmentDeadline = datetime.datetime.today()
-assign.assignmentDesc = "Lamba sa Research Paper"
-assign.assignmentName = "20000 Word Research Paper"
-assign.totalMarks = 9000
+assign.assignmentDeadline = datetime.datetime.today() + datetime.timedelta(days=10)
+assign.assignmentDesc = "Research Paper"
+assign.assignmentName = "2000 Word Research Paper"
+assign.totalMarks = 20
 assign.uploadDateTime = datetime.datetime.today()
-models.db.session.add(assign)
 
+models.db.session.add(assign)
 
 sub = models.AssignmentSubmission()
 sub.assignmentId = 1
-sub.userId = 1
+sub.userId = 2
 sub.submissionTime = datetime.datetime.today()
 sub.comment = 'Im awesome, please give me full marks'
-
 
 models.db.session.add(sub)
 
 sub = models.AssignmentSubmission()
-sub.assignmentId = 1
+sub.assignmentId = 2
 sub.userId = 2
 sub.submissionTime = datetime.datetime.today()
 sub.comment = 'Im awesome, please give me full marks'
