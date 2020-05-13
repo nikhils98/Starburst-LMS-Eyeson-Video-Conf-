@@ -49,7 +49,7 @@ def assignmentSubmission(id):
 
     print(submissions)
     return render_template('assignment_submission.html', submissions=submissions,
-                           enrollmentRole=enrollmentRole,isTeacher=isTeacher)
+                           enrollmentRole=enrollmentRole,isTeacher=isTeacher,assignmentId=id)
 
 @app.route('/downloadSubmission/<id>')
 @authenticate

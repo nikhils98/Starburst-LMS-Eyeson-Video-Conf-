@@ -33,7 +33,6 @@ def downloadResource(id):
 @authenticate
 def getResourcesByCourse(id):
     resources = models.Resource.query.filter_by(courseId=id).all()
-
     return render_template('resources.html', resources=resources, course_id=id)
 
 
@@ -42,6 +41,7 @@ def getResourcesByCourse(id):
 def createResource(courseId):
     formData = request.form
     resourceName = formData['resourceName']
+
 
     cid = escape(courseId)
 
