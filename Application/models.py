@@ -118,7 +118,7 @@ class Class(db.Model):
         db.String(255)
     )
     recordingLink = db.Column(
-        db.String(400)
+        db.String(4000)
     )
     classLink = db.Column(
         db.String(400)

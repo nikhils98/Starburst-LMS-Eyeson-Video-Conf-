@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Meetings</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<form action="{{ url_for('createMeeting') }}" method="get">
+    <input type="submit" id="recording-btn" value="Create room">
+</form>
+<div id="content">
+    {% if room %}
+    <pre>{{room}}</pre>
+    {% endif %}
+</div>
+{% endblock %}
