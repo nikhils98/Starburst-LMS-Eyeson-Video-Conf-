@@ -14,7 +14,7 @@
 
 <div id="topbar">
   <nav class="pos-f-t navbar navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" onclick="toggleNav()">
+    <button class="navbar-toggler" type="button" style="outline:none;" onclick="toggleNav()">
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>
@@ -26,8 +26,7 @@
   let body = document.getElementsByTagName("body")[0];
 
   function toggleNav() {
-    
-    sidebar.style.width === "0px" ? openNav() : closeNav();
+    sidebar.style.width < "250px" ? openNav() : closeNav();
   }
 
   function openNav() {

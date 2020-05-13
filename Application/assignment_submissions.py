@@ -47,9 +47,8 @@ def assignmentSubmission(id):
             .filter(models.AssignmentSubmission.userId == session['id']) \
             .all()
 
-    print(submissions)
     return render_template('assignment_submission.html', submissions=submissions,
-                           enrollmentRole=enrollmentRole,isTeacher=isTeacher,assignmentId=id)
+                           enrollmentRole=enrollmentRole, isTeacher=isTeacher, assignmentId=id)
 
 @app.route('/downloadSubmission/<id>')
 @authenticate
@@ -67,7 +66,7 @@ def downloadSubmission(id):
 @authenticate
 def submitAssignment(id):
     if request.method == "GET":
-        return render_template('submit_assignment_page.html',id=id)
+        return render_template('submit_assignment_page.html', id=id)
     # logic for submission
     formData = request.form
 
@@ -104,7 +103,7 @@ def submitAssignment(id):
 
     # after successful submission
     flash("Assignment Submitted")
-    return redirect(url_for('submitAssignment',id=id))
+    return redirect(url_for('submitAssignment', id=id))
 
 
 @app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])

@@ -12,41 +12,41 @@
 
 <div class="container" style="margin-top: 3%">
     <a class="btn btn-secondary" href={{url_for('getAssignmentsByCourse' ,id=assignment.courseId) }}>Back</a>
-    <div class="page-header">
+    <div class="page-header" style="margin: 2% 0%; padding: 3% 0% 0% 0%;">
       <h2>Assignment: {{ assignment.assignmentName }}<small> ({{ assignment.course.courseName }})</small></h2>
     </div>
     <div>
-        <h4>Assignment Description:</h4>
-            <div class="card">
-      <div class="card-body">
-          {{assignment.assignmentDesc }}
-      </div>
+        <div class="border-top" style="margin: 3% 0%; padding: 3% 0% 0% 0%;">
+            <h5>Description</h5>
+            <p>{{assignment.assignmentDesc }}</p>
+        </div>
+        <div class="border-top" style="margin: 3% 0%; padding: 3% 0% 0% 0%;">
+            <h5>Assignment Uploaded On: {{ assignment.uploadDateTime.strftime('%d-%b-%Y : %I:%M:%S %p') }}</h5>
+            <h5>Assignment Deadline: {{ assignment.assignmentDeadline.strftime('%d-%b-%Y : %I:%M:%S %p') }}</h5>
+            <h5>Total Marks: {{ assignment.totalMarks }}</h5>
+        </div>
+        <div class="border-top" style="margin: 3% 0%; padding: 3% 0% 0% 0%;">
+            {% if assignment.assignmentFiles|length >= 1 %}
+            <h5>Assignment Files [Click to 💾]</h5>
+            <div class="list-group">
+            {% for file in assignment.assignmentFiles %}
+                <a class="list-group-item list-group-item-action" href = {{ url_for('downloadAssignment' ,id=file.assignmentFileId)}}>{{ file.fileName }}</a>
+            {% endfor %}
             </div>
-        <br>
-        <h5>Assignment Deadline: <em>{{ assignment.assignmentDeadline.strftime('%d-%b-%Y : %I:%M:%S %p') }}</em></h5>
-        <h5>Total Marks: <em>{{ assignment.totalMarks }}</em></h5>
-        <h5>Assignment Uploaded Date:<em>{{ assignment.uploadDateTime.strftime('%d-%b-%Y : %I:%M:%S %p') }}</em></h5>
-        <br>
-        {% if assignment.assignmentFiles|length >= 1 %}
-        <h4>Assignment Files (if any) [Click to 💾]</h4>
-               <div class="list-group">
-                {% for file in assignment.assignmentFiles %}
-                    <a class="list-group-item list-group-item-action" href = {{ url_for('downloadAssignment' ,id=file.assignmentFileId)}}>{{ file.fileName }}</a>
-                {% endfor %}
-                </div>
-        <br>
             {% else %}
-            <h4>No Assignment Files</h4>
-        {% endif %}
-        {% if not isTeacher %}
-        <a class="btn btn-primary" href={{ url_for('submitAssignment',id=assignment.assignmentId) }}>
-            Submit Assignment
-            <i class="material-icons md-48">note_add</i>
-        </a>
-        {% endif %}
-        <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
-            View Submissions so far
-        </a>
+            <h5>No Assignment Files</h5>
+            {% endif %}
+        </div>
+        <div class="border-top" style="padding: 3% 0%;">
+            {% if not isTeacher %}
+            <a class="btn btn-primary" href={{ url_for('submitAssignment',id=assignment.assignmentId) }}>
+                Submit Assignment
+            </a>
+            {% endif %}
+            <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
+                View Submissions
+            </a>
+        </div>
     </div>
 </div>
 

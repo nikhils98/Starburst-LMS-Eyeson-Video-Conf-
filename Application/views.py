@@ -18,11 +18,21 @@ def index():
     for e in enrollments:
         courses.append(e.course)
 
+    # enrollments = models.Enrollment.query\
+    #     .filter(models.Enrollment.course.in_(courses))\
+    #     .filter(models.Enrollment.enrollmentRole == models.EnrollmentRole.Teacher)\
+    #     .all()
+    #
+    # instructors = []
+    # for e in enrollments:
+    #     instructors.append(e.user)
+
     #courses = models.Enrollment.query.filter_by(user_id=user_id).select_from().all()
 
     return render_template('home.html', courses=courses)
 
 @app.route('/assignment')
+@authenticate
 def assignmentPage():
     return render_template('assignments.html')
 
