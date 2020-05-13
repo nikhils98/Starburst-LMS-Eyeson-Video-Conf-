@@ -28,7 +28,7 @@
   }
   
   /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-  #topbar {
+  body {
     transition: margin-left .5s; /* If you want a transition effect */
   }
   
