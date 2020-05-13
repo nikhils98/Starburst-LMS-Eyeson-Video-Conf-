@@ -6,7 +6,7 @@
 
 {% block body %}
 <div id="mySidebar" class="sidebar bg-dark">
-    <div class="border-bottom border-white" style="padding-bottom: 40px;">
+    <div class="border-bottom border-white" style="padding-bottom: 30px;">
         <h5 id="welcome-txt" style="margin-left:30px; color: #d1d1d1;"></h5>
     </div>
     <div>
@@ -33,8 +33,9 @@
 
   $(document).ready(function(){
     console.log('loaded');
-    if(sessionStorage.getItem('user_name') !== null && sessionStorage.getItem('user_name') !== undefined)
-        $("#welcome-txt").html('Welcome, ' + sessionStorage.getItem('user_name'));
+    let name = localStorage.getItem('user_name');
+    if(name !== null && name !== undefined)
+        $("#welcome-txt").html('Welcome, ' + name);
   })
 
   function toggleNav() {

@@ -37,7 +37,7 @@
 <script type="text/javascript">
     if ('{{name}}' !== null && '{{name}}' !== undefined && '{{name}}' !== 'None'){
         console.log('{{name}}')
-        sessionStorage.setItem('user_name', '{{name}}');
+        localStorage.setItem('user_name', '{{name}}');
     }
 </script>
 {% endblock %}
