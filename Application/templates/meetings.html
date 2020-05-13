@@ -7,10 +7,12 @@
 
 {% block body %}
 {{ super() }}
-<button id="recording-btn"><a href={{ url_for('createMeeting') }}>Create room</button>
+<form action="{{ url_for('createMeeting') }}" method="get">
+    <input type="submit" id="recording-btn" value="Create room">
+</form>
 <div id="content">
     {% if room %}
-    <textarea rows="20" cols="200">{{room}}</textarea>
+    <pre>{{room}}</pre>
     {% endif %}
 </div>
 {% endblock %}

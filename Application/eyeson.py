@@ -26,5 +26,15 @@ def createMeeting():
 
 @app.route('/recording_update', methods=['GET', 'POST'])
 def recording_update():
-    print(request.get_json())
+    newClass = models.Class()
+    newClass.courseId = 1
+    newClass.className = "testing"
+    newClass.recordingLink = str(request.get_json())
+    models.db.session.add(newClass)
+    models.db.session.commit()
     return jsonify(success=True)
+
+@app.route('/classes')
+def classes():
+    classes = models.Class.query.all()
+    return render_template("classes.html", classes=classes)

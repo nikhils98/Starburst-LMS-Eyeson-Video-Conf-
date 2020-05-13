@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Classes</title>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+{% for c in classes %}
+    <div>
+        <p>{{ c.className }}</p>
+        <pre>{{c.recordingLink}}</pre>
+    </div>
+{% endfor %}
+
+{% endblock %}
