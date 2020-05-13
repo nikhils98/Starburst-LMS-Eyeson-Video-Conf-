@@ -37,7 +37,7 @@ def login():
     session['isAdmin'] = 1 if q.userRole == models.UserRole.Admin else 0
     session['id'] = q.userId
 
-    return redirect("home")
+    return redirect("home?name=" + q.name)
 
 
 ###REGISTER THE USER

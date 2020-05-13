@@ -6,39 +6,49 @@
 
 {% block body %}
 <div id="mySidebar" class="sidebar bg-dark">
-  <a href={{ url_for('index') }}>Home</a>
-  <a href="#">Tools</a>
-  <a href="{{ url_for('logout') }}">Sign Out</a>
-  <!--a href="#">Contact</a-->
+    <div class="border-bottom border-white" style="padding-bottom: 40px;">
+        <h5 id="welcome-txt" style="margin-left:30px; color: #d1d1d1;"></h5>
+    </div>
+    <div>
+        <br>
+        <a class="row" href={{ url_for('index') }}>Home</a>
+        <a class="row" href="#">Tools</a>
+        <a class="row" href="{{ url_for('logout') }}">Sign Out</a>
+        <!--a href="#">Contact</a-->
+    </div>
 </div>
 
 <div id="topbar">
-  <nav class="pos-f-t navbar navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" style="outline:none;" onclick="toggleNav()">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </nav>
+    <nav class="pos-f-t navbar navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" style="outline:none;" onclick="toggleNav()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
 </div>
 
 <script type="text/javascript">
   let sidebar = document.getElementById("mySidebar");
-  let topbar = document.getElementById("topbar");
   let body = document.getElementsByTagName("body")[0];
+  let width = "300px";
+
+  $(document).ready(function(){
+    console.log('loaded');
+    if(sessionStorage.getItem('user_name') !== null && sessionStorage.getItem('user_name') !== undefined)
+        $("#welcome-txt").html('Welcome, ' + sessionStorage.getItem('user_name'));
+  })
 
   function toggleNav() {
-    sidebar.style.width < "250px" ? openNav() : closeNav();
+    sidebar.style.width < width ? openNav() : closeNav();
   }
 
   function openNav() {
-    sidebar.style.width = "250px";
-    //topbar.style.marginLeft = "250px";
-    body.style.marginLeft = "250px";
+    sidebar.style.width = width;
+    body.style.marginLeft = width;
   }
 
   /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
   function closeNav() {
     sidebar.style.width = "0";
-    //topbar.style.marginLeft = "0";
     body.style.marginLeft = "0";
   }
 </script>

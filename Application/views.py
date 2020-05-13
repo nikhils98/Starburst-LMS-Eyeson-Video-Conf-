@@ -10,6 +10,10 @@ from Application.decorators.authenticate import authenticate
 @app.route('/home')
 @authenticate
 def index():
+    name = request.args.get('name')
+    #if request.args.get('name'):
+    #    name = request.args.get('name')
+
     user_id = session['id']
     enrollments = models.db.session.query(models.Enrollment)\
         .filter(models.Enrollment.userId == user_id).all()
@@ -29,7 +33,7 @@ def index():
 
     #courses = models.Enrollment.query.filter_by(user_id=user_id).select_from().all()
 
-    return render_template('home.html', courses=courses)
+    return render_template('home.html', courses=courses, name=name)
 
 @app.route('/assignment')
 @authenticate
