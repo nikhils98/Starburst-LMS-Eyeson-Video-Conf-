@@ -10,12 +10,39 @@
 {% block body %}
 {{ super() }}
 
-    <h1>Assignment submissions so far (if any)</h1>
-    <ul>
-    {% for submission in submissions %}
-        <li> Submission at: {{ submission.submissionTime  }} ( {{ submission.user.name }}) <a href={{ url_for('assignmentSubmissionDetail',id=submission.assignmentSubmissionId) }}> Click to view Assignment Submission</a></li>
-    {% endfor %}
-    </ul>
+    <div class="page-header">
+    <h1>Assignment Submissions so far</h1>
+    </div>
+        <table class="table" style="margin-top: 3%">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Submitted By</th>
+            <th scope="col">Submission Time</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
 
-
+        <tbody>
+        {% for submission in submissions %}
+        <tr>
+            <th scope="row">{{submission.user.name}}</th>
+            <td>{{submission.submissionTime.strftime("%b %d %Y %r")}}</td>
+            <td><a href={{ url_for('assignmentSubmissionDetail',id=submission.assignmentSubmissionId) }}
+                           >
+                <i class="material-icons md-48" style="color:blue;">visibility</i>
+                </a>
+{#                {% if isTeacher %}#}
+{#                <a href="">#}
+{#                    <i class="material-icons md-36" style="color:red;">delete</i>#}
+{#                </a>#}
+{#                <a href="">#}
+{#                    <i class="material-icons md-36" style="color:green;">edit</i>#}
+{#                </a>#}
+{#                {% endif %}#}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    <a class="btn btn-secondary" href={{url_for('getAssignmentDetailById' ,id=assignmentId) }}>Back</a>
 {% endblock %}

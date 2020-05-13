@@ -47,7 +47,6 @@ def getAssignmentDetailById(id):
 
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
 
-
     if not assignment:
         flash('Assignment did not exist')
         return redirect('/home')
