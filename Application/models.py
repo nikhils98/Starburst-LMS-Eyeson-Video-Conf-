@@ -134,6 +134,9 @@ class Lecture(db.Model):
     guestLink = db.Column(
         db.String(400)
     )
+    isRecordingActive = db.Column(
+        db.Boolean
+    )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course", backref="lectures")
 
@@ -145,9 +148,12 @@ class Recording(db.Model):
         primary_key=True,
         autoincrement=True
     )
-    link = db.Column(
-        db.String(400),
+    identifier = db.Column(
+        db.String(50),
         nullable=False
+    )
+    link = db.Column(
+        db.String(400)
     )
     lectureId = db.Column(db.Integer, db.ForeignKey('lectures.lectureId'))
     lecture = relationship("Lecture", backref="recordings")

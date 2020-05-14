@@ -47,6 +47,7 @@ def lectures(courseId):
     lecture.guestLink = response.json()['links']['guest_join']
     lecture.videoAccessKey = response.json()['access_key']
     lecture.videoRoomId = response.json()['room']['id']
+    lecture.isRecordingActive = False
 
     models.db.session.add(lecture)
     models.db.session.commit()

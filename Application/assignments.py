@@ -30,9 +30,6 @@ def deleteAssignment(id):
 def getAssignmentsByCourse(id):
     assignments = models.Assignment.query.filter_by(courseId=id).all()
 
-    #enrollment = models.Enrollment.query.filter_by(courseId=id, userId=session['id']).first()
-    #isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
-
     isTeacher = session['isTeacher']
 
     filteredAssignments = []
@@ -51,9 +48,6 @@ def getAssignmentDetailById(id):
     if not assignment:
         flash('Assignment did not exist')
         return redirect('/home')
-
-    #isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId, userId=session[
-    #    'id']).first().enrollmentRole == models.EnrollmentRole.Teacher
 
     isTeacher = session['isTeacher']
 

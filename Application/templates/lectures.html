@@ -2,8 +2,6 @@
 
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/toggle_switch.css') }}">
-
 <title>Lecture</title>
 {% endblock %}
 
@@ -23,6 +21,10 @@
             <th scope="col">Name</th>
             <th scope="col">Agenda</th>
             <th scope="col">Action</th>
+            <th scope="col">Recordings</th>
+            {% if isTeacher %}
+            <th scope="col">Recording Toggle</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -39,17 +41,30 @@
                 <a href={{ url_for('deleteLecture', courseId=courseId, id=l.lectureId) }}>
                 <i class="material-icons md-36" style="color:red;">delete</i>
                 </a>
-                <!-- Rounded switch -->
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
                 {% else %}
                 <a href={{ l.guestLink }} target="_blank">
                     <i class="material-icons md-36 text-primary">open_in_new</i>
                 </a>
                 {% endif %}
             </td>
+            <td>
+                <i class="material-icons md-36 text-primary"
+                   onclick="viewRecordings({{l.lectureId}});" style="cursor:pointer;">visibility</i>
+            </td>
+            {% if isTeacher %}
+            <td>
+                <div class="custom-control custom-switch">
+                    {% if l.isRecordingActive %}
+                    <input type="checkbox" class="custom-control-input" id={{l.lectureId}}
+                           onclick="toggleRecording({{l.lectureId}});" checked>
+                    {% else %}
+                    <input type="checkbox" class="custom-control-input" id={{l.lectureId}}
+                           onclick="toggleRecording({{l.lectureId}});">
+                    {% endif %}
+                    <label class="custom-control-label" for={{l.lectureId}}></label>
+                </div>
+            </td>
+            {% endif %}
         </tr>
         {% endfor %}
         </tbody>
@@ -115,11 +130,32 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="recordingsModal" tabindex="-1" role="dialog" aria-labelledby="recordingsModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recordingsModalTitle">Recording links</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="recordings-modal-body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $.datetimepicker.setLocale('en');
     $('.datetime-picker').datetimepicker();
 
 </script>
+
 {% if show_modal %}
 <script>
      $(document).ready(function(){
@@ -129,4 +165,84 @@
 </script>
 {% endif %}
 
+<script>
+    async function toggleRecording(lectureId) {
+        console.log(lectureId)
+        let input = document.getElementById(lectureId);
+        input.disabled = true;
+        if(input.checked){
+            await fetch(`${window.origin}/startRecording/${lectureId}`, {
+                method: 'GET',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                credentials: "include",
+            })
+            .then(function (promise) {
+                promise.json().then(function(json){
+                    console.log(json)
+                    if(!json['success'])
+                        input.checked = !input.checked;
+                    else{
+
+                    }
+                });
+            })
+            .catch(function (error) {
+
+            });
+        }
+        else{
+            await fetch(`${window.origin}/stopRecording/${lectureId}`, {
+                method: 'GET',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                credentials: "include",
+            })
+            .then(function (promise) {
+                promise.json().then(function(json){
+                    console.log(json)
+                    if(!json['success'])
+                        input.checked = !input.checked;
+                });
+            })
+            .catch(function (error) {
+
+            });
+        }
+        input.disabled = false;
+    }
+
+    async function viewRecordings(lectureId){
+        document.getElementById('recordings-modal-body').innerHTML = ``;
+        await fetch(`${window.origin}/recordings/${lectureId}`, {
+                method: 'GET',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                credentials: "include",
+            })
+            .then(function (promise) {
+                promise.json().then(function(json){
+                    let index = 1;
+                    json['links'].forEach(link => {
+                        document.getElementById('recordings-modal-body').innerHTML += `
+                            <div class="form-group">
+                                <a href=${link} target="_blank">Recording link ${index++}</a>
+                            </div>
+                        `
+                    })
+                        $("#recordingsModal").modal('show');
+
+                });
+            })
+            .catch(function (error) {
+
+            });
+    }
+
+</script>
+
 {% endblock %}
+
