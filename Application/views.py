@@ -3,6 +3,7 @@ from sqlalchemy.orm import load_only
 from Application import app
 from Application import models
 from flask import request, render_template, redirect, flash, session, url_for
+from markupsafe import escape
 
 from Application.decorators.authenticate import authenticate
 
@@ -38,6 +39,12 @@ def index():
 @app.route('/coursesite/<id>')
 @authenticate
 def coursesite(id):
-    user_id = session['id']
-    # i changed the parameter type because this allows mandatory id passing
-    return render_template('course_page.html', id=id)
+    userId = session['id']
+    courseId = escape(id)
+
+    enrollment = models.Enrollment.query.filter_by(courseId=courseId, userId=userId).first()
+    isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
+
+    session['isTeacher'] = isTeacher
+
+    return render_template('course_page.html', id=courseId, isTeacher=isTeacher)

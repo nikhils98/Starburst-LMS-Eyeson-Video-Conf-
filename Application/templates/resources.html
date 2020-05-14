@@ -10,11 +10,14 @@
 {% block body %}
 {{ super() }}
 <div class="container" style="margin-top: 3%">
-    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}> Back</a>
+    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}>Back</a>
+
+    {% if isTeacher %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#resourceModal">
         Create Resource
     </button>
+    {% endif %}
     <table class="table" style="margin-top: 5%">
         <thead class="thead-dark">
         <tr>
@@ -32,8 +35,10 @@
 
                 <a href={{ url_for('downloadResource', id=resource.resourceId) }}>
                     <i class="material-icons md-36">get_app</i>
+                {% if isTeacher %}
                 <a href={{ url_for('deleteResource', courseId=course_id, id=resource.resourceId) }}>
                     <i class="material-icons md-36" style="color:red;">delete</i>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

@@ -29,9 +29,11 @@ def deleteAssignment(id):
 @app.route('/assignments/<id>', methods=['GET'])
 def getAssignmentsByCourse(id):
     assignments = models.Assignment.query.filter_by(courseId=id).all()
-    enrollment = models.Enrollment.query.filter_by(courseId=id, userId=session['id']).first()
 
-    isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
+    #enrollment = models.Enrollment.query.filter_by(courseId=id, userId=session['id']).first()
+    #isTeacher = enrollment.enrollmentRole == models.EnrollmentRole.Teacher
+
+    isTeacher = session['isTeacher']
 
     filteredAssignments = []
 
@@ -50,8 +52,11 @@ def getAssignmentDetailById(id):
         flash('Assignment did not exist')
         return redirect('/home')
 
-    isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId, userId=session[
-        'id']).first().enrollmentRole == models.EnrollmentRole.Teacher
+    #isTeacher = models.Enrollment.query.filter_by(courseId=assignment.courseId, userId=session[
+    #    'id']).first().enrollmentRole == models.EnrollmentRole.Teacher
+
+    isTeacher = session['isTeacher']
+
     return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher)
 
 
