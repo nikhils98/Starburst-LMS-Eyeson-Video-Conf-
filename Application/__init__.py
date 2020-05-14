@@ -153,4 +153,4 @@ models.db.session.add(sub)
 
 models.db.session.commit()
 
-from . import views, login, assignments, resources, assignment_submissions, eyeson
+from . import views, login, assignments, resources, assignment_submissions, lectures

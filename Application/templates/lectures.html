@@ -2,6 +2,7 @@
 
 {% block head %}
 {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/toggle_switch.css') }}">
 
 <title>Lecture</title>
 {% endblock %}
@@ -9,39 +10,48 @@
 {% block body %}
 {{ super() }}
 <div class="container" style="margin-top: 3%">
-    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=course_id) }}>Back</a>
-    {% if not isTeacher %}
+    <a class="btn btn-secondary" href={{ url_for('coursesite' ,id=courseId) }}>Back</a>
+    {% if isTeacher %}
     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#lectureModal">
         Schedule Lecture
     </button>
     {% endif %}
     <table class="table" style="margin-top: 3%">
         <thead class="thead-dark">
-            <tr>
-                <th scope="col">Datetime</th>
-                <th scope="col">Name</th>
-                <th scope="col">Agenda</th>
-                <th scope="col">Action</th>
-            </tr>
+        <tr>
+            <th scope="col">Datetime</th>
+            <th scope="col">Name</th>
+            <th scope="col">Agenda</th>
+            <th scope="col">Action</th>
+        </tr>
         </thead>
         <tbody>
-            {% for l in lectures %}
-            <tr class="border">
-                <th scope="row">{{l.startDatetime.strftime("%b %d %Y %r")}}</th>
-                <td>{{l.lectureName}}</td>
-                <td>{{l.lectureAgenda}}</td>
-                <td>
-                    {% if isTeacher %}
-                    <a href={{ l.hostLink }}>Join</a>
-                    <a href={{ url_for('deleteAssignment', id=assignment.assignmentId) }}>
-                        <i class="material-icons md-36" style="color:red;">delete</i>
-                    </a>
-                    {% else %}
-                    <a href={{ l.guestLink }}>Join</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+        {% for l in lectures %}
+        <tr class="border">
+            <th scope="row">{{l.startDatetime.strftime("%b %d %Y %r")}}</th>
+            <td>{{l.lectureName}}</td>
+            <td>{{l.lectureAgenda}}</td>
+            <td>
+                {% if isTeacher %}
+                <a href={{ l.hostLink }} target="_blank">
+                    <i class="material-icons md-36 text-primary">open_in_new</i>
+                </a>
+                <a href={{ url_for('deleteLecture', courseId=courseId, id=l.lectureId) }}>
+                <i class="material-icons md-36" style="color:red;">delete</i>
+                </a>
+                <!-- Rounded switch -->
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                {% else %}
+                <a href={{ l.guestLink }} target="_blank">
+                    <i class="material-icons md-36 text-primary">open_in_new</i>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -64,33 +74,35 @@
                 </div>
             </div>
             {% endif %}
-            <form method="post" action="{{ url_for('lectures',courseId=course_id) }}">
+            <form method="post" action="{{ url_for('lectures', courseId=courseId) }}">
                 <div class="modal-body">
                     <div class="form-group">
                         {% if lecture_name %}
-                        <input type="text" class="form-control" name="lectureName" placeholder="Name"
+                        <input type="text" class="form-control" name="lectureName"
                                value={{ lecture_name }}>
                         {% else %}
-                        <input type="text" class="form-control" name="lectureName" placeholder="Name">
+                        <input type="text" class="form-control" name="lectureName"
+                               placeholder="Name (Optional)">
                         {% endif %}
                     </div>
                     <div class="form-group">
                         {% if lecture_agenda %}
-                        <input type="text" class="form-control" name="lectureAgenda" placeholder="Agenda"
+                        <input type="text" class="form-control" name="lectureAgenda"
                                value={{ lecture_agenda }}>
                         {% else %}
-                        <input type="text" class="form-control" name="lectureAgenda" placeholder="Agenda">
+                        <input type="text" class="form-control" name="lectureAgenda"
+                               placeholder="Agenda (Optional)">
                         {% endif %}
                     </div>
                     <div class="form-group">
                         {% if lecture_datetime %}
-                            <input type="text" class="form-control datetime-picker"
-                                   name="startDatetime" placeholder="Start Datetime"
-                                   value={{ lecture_datetime}} autocomplete="off">
+                        <input type="text" class="form-control datetime-picker"
+                               name="startDatetime" placeholder="Start Datetime"
+                               value={{ lecture_datetime}} autocomplete="off">
                         {% else %}
-                            <input type="text" class="form-control datetime-picker"
-                                   name="startDatetime"
-                                   placeholder="Start Datetime" autocomplete="off">
+                        <input type="text" class="form-control datetime-picker"
+                               name="startDatetime"
+                               placeholder="Start Datetime" autocomplete="off">
                         {% endif %}
                     </div>
                 </div>
@@ -106,12 +118,14 @@
 <script>
     $.datetimepicker.setLocale('en');
     $('.datetime-picker').datetimepicker();
+
 </script>
 {% if show_modal %}
 <script>
      $(document).ready(function(){
-        $("#assignmentModal").modal('show');
+        $("#lectureModal").modal('show');
     });
+
 </script>
 {% endif %}
 

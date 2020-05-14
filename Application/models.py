@@ -121,6 +121,12 @@ class Lecture(db.Model):
         db.DateTime,
         nullable=False
     )
+    videoAccessKey = db.Column(
+        db.String(50)
+    )
+    videoRoomId = db.Column(
+        db.String(50)
+    )
     hostLink = db.Column(
         db.String(400),
         nullable=False
