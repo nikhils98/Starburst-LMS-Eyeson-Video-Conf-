@@ -36,6 +36,7 @@ def login():
         # correct password
     session['isAdmin'] = 1 if q.userRole == models.UserRole.Admin else 0
     session['id'] = q.userId
+    session['userName'] = q.name
 
     return redirect("home?name=" + q.name)
 

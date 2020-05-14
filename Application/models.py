@@ -101,30 +101,50 @@ class Enrollment(db.Model):
 
     enrollmentRole = db.Column(Enum(EnrollmentRole))
 
-class Class(db.Model):
-    __tablename__ = "classes"
+class Lecture(db.Model):
+    __tablename__ = "lectures"
     # __table_args__ = {"schema": "starburst"}
 
-    classId = db.Column(
+    lectureId = db.Column(
         db.Integer,
         primary_key=True,
         autoincrement=True
     )
-    className = db.Column(
+    lectureName = db.Column(
         db.String(60),
         nullable=False
     )
-    classAgenda = db.Column(
+    lectureAgenda = db.Column(
         db.String(255)
     )
-    recordingLink = db.Column(
-        db.String(4000)
+    startDatetime = db.Column(
+        db.DateTime,
+        nullable=False
     )
-    classLink = db.Column(
+    hostLink = db.Column(
+        db.String(400),
+        nullable=False
+    )
+    guestLink = db.Column(
         db.String(400)
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
-    course = relationship("Course")
+    course = relationship("Course", backref="lectures")
+
+class Recording(db.Model):
+    __tablename__ = "lecture_recordings"
+
+    recordingId = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+    link = db.Column(
+        db.String(400),
+        nullable=False
+    )
+    lectureId = db.Column(db.Integer, db.ForeignKey('lectures.lectureId'))
+    lecture = relationship("Lecture", backref="recordings")
 
 class Resource(db.Model):
     __tablename__ = "resources"

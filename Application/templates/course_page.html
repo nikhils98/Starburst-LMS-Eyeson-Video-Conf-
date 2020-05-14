@@ -33,22 +33,20 @@
                     <h5 class="card-title">{{ "Resources" }}</h5>
                 </div>
                 </a>
-                {# <a href={{ url_for('getResourcesByCourse', id=id) }}>Get Resources</a>#}
             </div>
         </div>
         <div class="col">
             <div class="card text-center" style="cursor: pointer">
-                <img src="../static/img/default_recordings.jpg" class="card-img-top" alt="..."
-                     height="200">
-                <div class="card-body">
-                    <h5 class="card-title">{{ "Lecture Recordings" }}</h5>
-                </div>
-                <!--                <a href = {{ url_for('getAssignmentsByCourse' ,id=1) }}>Get Assignments</a>-->
+                <a href={{ url_for('lectures', courseId=id) }}>
+                    <img src="../static/img/default_recordings.jpg" class="card-img-top" alt="..."
+                         height="200">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ "Lectures" }}</h5>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
-    <br>
-
 </div>
 
 {% endblock %}

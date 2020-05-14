@@ -34,16 +34,16 @@
             <td>{{assignment.totalMarks}}</td>
             <td>{{assignment.uploadDateTime.strftime("%b %d %Y %r")}}</td>
             <td>{{assignment.assignmentDeadline.strftime("%b %d %Y %r")}}</td>
-            <td><a href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}
-                >
-                <i class="material-icons md-48" style="color:blue;">visibility</i>
+            <td>
+                <a href={{ url_for('getAssignmentDetailById',id=assignment.assignmentId) }}>
+                    <i class="material-icons md-48" style="color:blue;">visibility</i>
                 </a>
                 {% if isTeacher %}
                 <a href={{ url_for('deleteAssignment', id=assignment.assignmentId) }}>
-                <i class="material-icons md-36" style="color:red;">delete</i>
+                    <i class="material-icons md-36" style="color:red;">delete</i>
                 </a>
                 <a href={{ url_for('updateAssignment', id=assignment.assignmentId) }}>
-                <i class="material-icons md-36" style="color:green;">edit</i>
+                    <i class="material-icons md-36" style="color:green;">edit</i>
                 </a>
                 {% endif %}
             </td>
@@ -52,10 +52,6 @@
         </tbody>
 
     </table>
-    <br>
-
-    <div class="row">
-    </div>
 </div>
 
 <div class="modal fade" id="assignmentModal" tabindex="-1" role="dialog"
@@ -80,14 +76,12 @@
                   action="{{ url_for('createAssignment',course_id=course_id) }}">
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="assignmentName" class="col-md-2 col-form-label">Title</label>
                         <div class="col-md-10">
                             <input type="text" class="form-control" id="assignmentName" name="assignmentName"
                                    placeholder="Title" value={{assignment_name}}>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="totalMarks" class="col-md-2 col-form-label">Total Marks</label>
                         <div class="col-md-10">
                             <input type="number" step="0.1" min="0" class="form-control" id="totalMarks"
                                    name="totalMarks"
@@ -95,7 +89,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="datetimepicker" class="col-md-2 col-form-label">Due Date</label>
                         <div class="col-md-10">
                             <input type="text" id="datetimepicker" class="form-control"
                                    name="assignmentDeadline"
@@ -103,13 +96,11 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="files" class="col-md-2 col-form-label">Files</label>
                         <div class="col-md-10">
                             <input type="file" name="files" id="files" multiple>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="assignmentDesc" class="col-md-2 col-form-label">Description</label>
                         <div class="col-md-10">
                         <textarea type="input" class="form-control" id="assignmentDesc" name="assignmentDesc"
                                   placeholder="Description">{{assignment_desc}}</textarea>

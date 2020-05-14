@@ -35,11 +35,6 @@ def index():
 
     return render_template('home.html', courses=courses, name=name)
 
-@app.route('/assignment')
-@authenticate
-def assignmentPage():
-    return render_template('assignments.html')
-
 @app.route('/coursesite/<id>')
 @authenticate
 def coursesite(id):
