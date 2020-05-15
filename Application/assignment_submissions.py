@@ -70,6 +70,12 @@ def submitAssignment(id):
     # logic for submission
     formData = request.form
 
+    assignment = models.Assignment.query.filter_by(assignmentId=escape(id)).first()
+    if datetime.today() > assignment.assignmentDeadline:
+        flash('Assignment deadline has passed')
+        return render_template('assignment_detail.html', assignment=assignment,
+                               isTeacher=session['isTeacher'], hasDeadlinePassed=True)
+
     submission = models.AssignmentSubmission()
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
@@ -107,6 +113,7 @@ def submitAssignment(id):
 
 
 @app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])
+@authenticate
 def gradeAssignmentSubmission(id):
     if request.method == "GET":
         return render_template('grade_assignment_page.html',id=id)

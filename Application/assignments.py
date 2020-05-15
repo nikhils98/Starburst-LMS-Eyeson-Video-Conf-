@@ -11,6 +11,7 @@ PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 
 
 
 @app.route('/assignments/delete/<id>')
+@authenticate
 def deleteAssignment(id):
     if not id:
         return jsonify(success=False, msg='Assignment id is missing')
@@ -26,6 +27,7 @@ def deleteAssignment(id):
 
 # Get list of assignments By Course
 @app.route('/assignments/<id>', methods=['GET'])
+@authenticate
 def getAssignmentsByCourse(id):
     assignments = models.Assignment.query.filter_by(courseId=id).all()
 
@@ -41,8 +43,12 @@ def getAssignmentsByCourse(id):
 
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
+@authenticate
 def getAssignmentDetailById(id):
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
+    hasDeadlinePassed = False
+    if datetime.today() > assignment.assignmentDeadline:
+        hasDeadlinePassed = True
 
     if not assignment:
         flash('Assignment did not exist')
@@ -50,10 +56,12 @@ def getAssignmentDetailById(id):
 
     isTeacher = session['isTeacher']
 
-    return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher)
+    return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher,
+                           hasDeadlinePassed=hasDeadlinePassed)
 
 
 @app.route('/asssignments/download/<id>', methods=['GET'])
+@authenticate
 def downloadAssignment(id):
     fileId = id
     if not fileId:
