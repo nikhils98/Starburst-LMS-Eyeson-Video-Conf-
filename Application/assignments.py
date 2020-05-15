@@ -1,6 +1,6 @@
 from Application import app, org
 from Application import models
-from flask import request, render_template, redirect, flash, session, send_file
+from flask import request, render_template, redirect, flash, session, send_file, jsonify
 from Application.decorators.authenticate import authenticate
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -13,16 +13,15 @@ PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 
 @app.route('/assignments/delete/<id>')
 def deleteAssignment(id):
     if not id:
-        flash("Assignment id is missing")
-        return redirect('/home')
+        return jsonify(success=False, msg='Assignment id is missing')
     else:
         ass = models.Assignment.query.filter_by(assignmentId=id).one()
-        cid = str(ass.course.courseId)
+        # cid = str(ass.course.courseId)
         models.db.session.delete(ass)
         models.db.session.commit()
-        flash("Successfully Deleted")
+        # flash("Successfully Deleted")
 
-    return redirect('/assignments/' + cid)
+    return jsonify(success=True)
 
 
 # Get list of assignments By Course

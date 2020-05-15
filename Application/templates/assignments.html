@@ -39,9 +39,8 @@
                     <i class="material-icons md-48" style="color:blue;">visibility</i>
                 </a>
                 {% if isTeacher %}
-                <a href={{ url_for('deleteAssignment', id=assignment.assignmentId) }}>
-                    <i class="material-icons md-36" style="color:red;">delete</i>
-                </a>
+                <i class="material-icons md-36" style="color:red; cursor:pointer;"
+                   onclick="showConfirmationModal('assignments/delete/' + {{assignment.assignmentId}});">delete</i>
                 <a href={{ url_for('updateAssignment', id=assignment.assignmentId) }}>
                     <i class="material-icons md-36" style="color:green;">edit</i>
                 </a>

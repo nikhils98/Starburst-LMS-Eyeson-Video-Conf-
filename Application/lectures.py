@@ -72,4 +72,4 @@ def deleteLecture(courseId, id):
         models.db.session.delete(lecture)
         models.db.session.commit()
 
-    return redirect('/lectures/' + cid)
+    return jsonify(success=True)
