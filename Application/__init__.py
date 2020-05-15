@@ -135,22 +135,6 @@ assign.uploadDateTime = datetime.datetime.today()
 
 models.db.session.add(assign)
 
-sub = models.AssignmentSubmission()
-sub.assignmentId = 1
-sub.userId = 2
-sub.submissionTime = datetime.datetime.today()
-sub.comment = 'Im awesome, please give me full marks'
-
-models.db.session.add(sub)
-
-sub = models.AssignmentSubmission()
-sub.assignmentId = 2
-sub.userId = 2
-sub.submissionTime = datetime.datetime.today()
-sub.comment = 'Im awesome, please give me full marks'
-
-models.db.session.add(sub)
-
 models.db.session.commit()
 
 from . import views, login, assignments, resources, assignment_submissions, lectures, recordings

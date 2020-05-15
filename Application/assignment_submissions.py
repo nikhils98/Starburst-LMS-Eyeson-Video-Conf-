@@ -79,8 +79,6 @@ def submitAssignment(id):
     submission = models.AssignmentSubmission()
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
-    # Technically not needed since default in db is currentime
-    submission.submissionTime = datetime.today()
     submission.comment = formData["comment"]
 
     models.db.session.add(submission)
@@ -104,6 +102,9 @@ def submitAssignment(id):
             submissionFile.submissionId = submission.assignmentSubmissionId
 
             models.db.session.add(submissionFile)
+        else:
+            flash("No file selected")
+            return redirect(url_for('submitAssignment', id=id))
 
     models.db.session.commit()
 
