@@ -88,7 +88,7 @@ def createAssignment(course_id):
     totalMarks = formData['totalMarks']
 
     print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
-    if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
+    if assignmentDesc == '' or assignmentName == '' or totalMarks == '' or formData["assignmentDeadline"] == '':
         # flash('assignment fields empty')
         return render_template('assignments.html', course_id=course_id,
                                assignments=filteredAssignments,
@@ -96,19 +96,23 @@ def createAssignment(course_id):
                                assignment_name=assignmentName,
                                assignment_desc=assignmentDesc,
                                total_marks=totalMarks,
-                               show_modal=True)
+                               show_modal=True,
+                               isTeacher=session['isTeacher'])
     # We need to include time here as well. When u change it to that: DONE
     try:
         assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
+        if datetime.today() >= assignmentDeadline:
+            raise ValueError('Due date must be greater than current time')
     except ValueError:
         # flash('Please enter date time field')
         return render_template('assignments.html', course_id=course_id,
-                               err_msg='Assignment Due Date must not be empty. ',
+                               err_msg='Due date must be greater than current time',
                                assignments=filteredAssignments,
                                assignment_name=assignmentName,
                                assignment_desc=assignmentDesc,
                                total_marks=totalMarks,
-                               show_modal=True)
+                               show_modal=True,
+                               isTeacher=session['isTeacher'])
 
     newAssignment = models.Assignment()
     newAssignment.assignmentDesc = assignmentDesc
