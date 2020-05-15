@@ -148,7 +148,7 @@ def createAssignment(course_id):
 
     models.db.session.commit()
     flash("Assignment successfully created")
-    return getAssignmentsByCourse(id=course_id)
+    return redirect('/assignments/' + course_id)
 
 
 @app.route('/updateAssignment/<id>', methods=['GET', 'POST'])
