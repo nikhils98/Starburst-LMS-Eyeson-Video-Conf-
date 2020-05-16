@@ -71,7 +71,7 @@ def submitAssignment(id):
     formData = request.form
 
     assignment = models.Assignment.query.filter_by(assignmentId=escape(id)).first()
-    if datetime.today() > assignment.assignmentDeadline:
+    if datetime.utcnow() + timedelta(hours=5) > assignment.assignmentDeadline:
         flash('Assignment deadline has passed')
         return render_template('assignment_detail.html', assignment=assignment,
                                isTeacher=session['isTeacher'], hasDeadlinePassed=True)
