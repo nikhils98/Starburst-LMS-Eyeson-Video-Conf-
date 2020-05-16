@@ -2,7 +2,7 @@ from Application import app, org
 from Application import models
 from flask import request, render_template, redirect, flash, session, send_file, jsonify
 from Application.decorators.authenticate import authenticate
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 import os
 
@@ -47,7 +47,7 @@ def getAssignmentsByCourse(id):
 def getAssignmentDetailById(id):
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
     hasDeadlinePassed = False
-    if datetime.today() > assignment.assignmentDeadline:
+    if datetime.today() + timedelta(hours=5) > assignment.assignmentDeadline:
         hasDeadlinePassed = True
 
     if not assignment:
@@ -109,7 +109,7 @@ def createAssignment(course_id):
     # We need to include time here as well. When u change it to that: DONE
     try:
         assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
-        if datetime.today() >= assignmentDeadline:
+        if datetime.today() + timedelta(hours=5) >= assignmentDeadline:
             raise ValueError('Due date must be greater than current time')
     except ValueError:
         # flash('Please enter date time field')
@@ -126,7 +126,6 @@ def createAssignment(course_id):
     newAssignment.assignmentDesc = assignmentDesc
     newAssignment.assignmentName = assignmentName
     newAssignment.assignmentDeadline = assignmentDeadline
-    newAssignment.uploadDateTime = datetime.today()
     newAssignment.totalMarks = float(totalMarks)
     newAssignment.courseId = course.courseId
 
@@ -179,6 +178,8 @@ def updateAssignment(id):
         # We need to include time here as well. When u change it to that: DONE
         try:
             assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
+            if datetime.today() + timedelta(hours=5) >= assignmentDeadline:
+                raise ValueError('Due date must be greater than current time')
         except ValueError:
             flash('Please enter date time field')
             return render_template('update_assignment_page.html', assignment=assignment)
@@ -190,7 +191,7 @@ def updateAssignment(id):
         assignment.assignmentDesc = assignmentDesc
         assignment.assignmentName = assignmentName
         assignment.assignmentDeadline = assignmentDeadline
-        assignment.uploadDateTime = datetime.today()
+        assignment.uploadDateTime = datetime.today() + timedelta(hours=5)
         assignment.totalMarks = float(totalMarks)
 
         # to get the assignmentId. Unlike commit, flush kinda communicates the changes

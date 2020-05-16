@@ -176,7 +176,7 @@ class Resource(db.Model):
     )
     uploadedDate = db.Column(
         db.DateTime,
-        default=datetime.datetime.utcnow()
+        default=datetime.datetime.utcnow() + datetime.timedelta(hours=5)
     )
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course")
@@ -205,7 +205,7 @@ class Assignment(db.Model):
     courseId = db.Column(db.Integer, db.ForeignKey('courses.courseId'))
     course = relationship("Course", backref="assignments")
     totalMarks = db.Column(db.Float, nullable=False)
-    uploadDateTime = db.Column(db.DateTime, nullable=False)
+    uploadDateTime = db.Column(db.DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=5))
 
 class AssignmentFile(db.Model):
     __tablename__ = "assignment_files"
@@ -236,7 +236,7 @@ class AssignmentSubmission(db.Model):
         autoincrement=True
     )
 
-    submissionTime = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+    submissionTime = db.Column(db.DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=5))
     assignmentId = db.Column(db.Integer, db.ForeignKey('assignments.assignmentId'))
     assignment = relationship("Assignment")
     assignmentGrade = db.Column(db.String(20))
