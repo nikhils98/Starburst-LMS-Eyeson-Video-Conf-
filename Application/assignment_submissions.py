@@ -4,7 +4,7 @@ from Application import app, org
 from Application import models
 from flask import request, render_template, redirect, flash, session, send_file, url_for
 from Application.decorators.authenticate import authenticate
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from markupsafe import escape
 import os
@@ -80,6 +80,7 @@ def submitAssignment(id):
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
     submission.comment = formData["comment"]
+    submission.submissionTime = datetime.utcnow() + timedelta(hours=5)
 
     models.db.session.add(submission)
     models.db.session.flush()
