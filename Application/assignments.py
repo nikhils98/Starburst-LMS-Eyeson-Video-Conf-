@@ -126,6 +126,7 @@ def createAssignment(course_id):
     newAssignment.assignmentDesc = assignmentDesc
     newAssignment.assignmentName = assignmentName
     newAssignment.assignmentDeadline = assignmentDeadline
+    newAssignment.uploadDateTime = datetime.utcnow() + timedelta(hours=5)
     newAssignment.totalMarks = float(totalMarks)
     newAssignment.courseId = course.courseId
 

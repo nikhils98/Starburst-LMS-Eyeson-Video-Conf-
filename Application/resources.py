@@ -1,7 +1,7 @@
 from Application import app, org
 from Application import models
 from flask import request, render_template, redirect, flash, session, send_file, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from markupsafe import escape
 import os
@@ -53,6 +53,7 @@ def createResource(courseId):
 
     newResource = models.Resource()
     newResource.resourceName = resourceName
+    newResource.uploadedDate = datetime.utcnow() + timedelta(hours=5)
     newResource.courseId = cid
 
     file = request.files['file']
