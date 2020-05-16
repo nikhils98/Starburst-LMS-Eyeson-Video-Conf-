@@ -32,12 +32,13 @@
             <th scope="row">{{resource.resourceName}}</th>
             <td>{{ resource.uploadedDate.strftime('%d-%b-%Y : %I:%M:%S %p') }}</td>
             <td>
-
-                <a href={{ url_for('downloadResource', id=resource.resourceId) }}>
+                <a href={{ url_for('downloadResource', id=resource.resourceId)}}>
                     <i class="material-icons md-36">get_app</i>
+                </a>
                 {% if isTeacher %}
-                <a href={{ url_for('deleteResource', courseId=course_id, id=resource.resourceId) }}>
-                    <i class="material-icons md-36" style="color:red;">delete</i>
+                <i class="material-icons md-36" style="color:red; cursor:pointer;"
+                   onclick="showConfirmationModal('deleteResource/' + {{course_id}} + '/' + {{resource.resourceId}});">
+                        delete</i>
                 {% endif %}
             </td>
         </tr>

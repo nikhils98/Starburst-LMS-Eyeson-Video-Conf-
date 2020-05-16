@@ -39,13 +39,19 @@
         </div>
         <div class="border-top" style="padding: 3% 0%;">
             {% if not isTeacher %}
-            <a class="btn btn-primary" href={{ url_for('submitAssignment',id=assignment.assignmentId) }}>
-                Submit Assignment
+                {% if not hasDeadlinePassed %}
+                <a class="btn btn-primary" href={{ url_for('submitAssignment',id=assignment.assignmentId) }}>
+                    Submit Assignment
+                </a>
+                {% endif %}
+            <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
+                View My Submissions
             </a>
-            {% endif %}
+            {% else %}
             <a class="btn btn-info" href= {{ url_for('assignmentSubmission',id=assignment.assignmentId) }}>
                 View Submissions
             </a>
+            {% endif %}
         </div>
     </div>
 </div>

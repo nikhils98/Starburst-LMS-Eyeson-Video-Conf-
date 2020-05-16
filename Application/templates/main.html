@@ -26,6 +26,35 @@
     </nav>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="confirmationModalBody" class="modal-body">
+                <div class="form-group">
+                    <p>This action cannot be undone. Are you sure you want to proceed?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="confirmationModalConfirmBtn" type="submit" class="btn btn-danger">Confirm</button>
+                <button id="confirmationModalLoadingBtn" class='btn btn-danger'
+                        type='button' style="display:none" disabled>
+                    <span class='spinner-border spinner-border-sm' role='status'></span>
+                        Loading...
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
   let sidebar = document.getElementById("mySidebar");
   let body = document.getElementsByTagName("body")[0];
@@ -52,6 +81,43 @@
     sidebar.style.width = "0";
     body.style.marginLeft = "0";
   }
+</script>
+
+<script>
+    var targetUrl = null;
+
+    function showConfirmationModal(url){
+        targetUrl = url;
+        $('#confirmationModal').modal('show')
+    }
+
+    $('#confirmationModalConfirmBtn').click(async function confirmAction() {
+        console.log(targetUrl);
+
+        $(this).hide();
+        $('#confirmationModalLoadingBtn').show();
+
+        await fetch(`${window.origin}/${targetUrl}`, {
+                method: 'GET',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                credentials: "include",
+            })
+            .then(function (promise) {
+                promise.json().then(function(json){
+                    console.log(json)
+                    if(json['success'])
+                        location.reload()
+                });
+            })
+            .catch(function (error) {
+
+            });
+
+            $(this).show();
+            $('#confirmationModalLoadingBtn').hide();
+    })
 </script>
 
 {% endblock %}

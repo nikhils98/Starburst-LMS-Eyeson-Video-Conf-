@@ -1,6 +1,6 @@
 from Application import app, org
 from Application import models
-from flask import request, render_template, redirect, flash, session, send_file
+from flask import request, render_template, redirect, flash, session, send_file, jsonify
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -83,15 +83,16 @@ def deleteResource(courseId, id):
     resourceId = escape(id)
 
     if not cid:
-        flash("Course id is missing")
-        return redirect('/home')
+        return jsonify(success=True, msg='Course id is missing')
     elif not resourceId:
-        flash("Select a resource")
+        return jsonify(success=True, msg='Please select a resource')
     else:
-        resource = models.Resource.query.filter_by(resourceId=resourceId).one()
+        resource = models.Resource.query.filter_by(resourceId=resourceId).first()
+        if not resource:
+            return jsonify(success=True, msg='Please select a resource')
         os.remove(resource.filePath)
         models.db.session.delete(resource)
         models.db.session.commit()
         flash("Successfully Deleted")
 
-    return redirect('/resources/' + cid)
+    return jsonify(success=True)

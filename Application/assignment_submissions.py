@@ -70,11 +70,15 @@ def submitAssignment(id):
     # logic for submission
     formData = request.form
 
+    assignment = models.Assignment.query.filter_by(assignmentId=escape(id)).first()
+    if datetime.today() > assignment.assignmentDeadline:
+        flash('Assignment deadline has passed')
+        return render_template('assignment_detail.html', assignment=assignment,
+                               isTeacher=session['isTeacher'], hasDeadlinePassed=True)
+
     submission = models.AssignmentSubmission()
     submission.assignmentId = escape(id)
     submission.userId = session["id"]
-    # Technically not needed since default in db is currentime
-    submission.submissionTime = datetime.today()
     submission.comment = formData["comment"]
 
     models.db.session.add(submission)
@@ -98,6 +102,9 @@ def submitAssignment(id):
             submissionFile.submissionId = submission.assignmentSubmissionId
 
             models.db.session.add(submissionFile)
+        else:
+            flash("No file selected")
+            return redirect(url_for('submitAssignment', id=id))
 
     models.db.session.commit()
 
@@ -107,6 +114,7 @@ def submitAssignment(id):
 
 
 @app.route('/gradeAssignmentSubmission/<id>', methods=['GET', 'POST'])
+@authenticate
 def gradeAssignmentSubmission(id):
     if request.method == "GET":
         return render_template('grade_assignment_page.html',id=id)

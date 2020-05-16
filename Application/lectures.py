@@ -55,10 +55,9 @@ def lectures(courseId):
     flash("Lecture has been scheduled")
     return redirect('/lectures/' + cid)
 
-@app.route('/deleteLecture/<courseId>/<id>')
+@app.route('/deleteLecture/<id>')
 @authenticate
-def deleteLecture(courseId, id):
-    cid = escape(courseId)
+def deleteLecture(id):
     lid = escape(id)
 
     lecture = models.Lecture.query.filter_by(lectureId=lid).first()
@@ -72,4 +71,4 @@ def deleteLecture(courseId, id):
         models.db.session.delete(lecture)
         models.db.session.commit()
 
-    return redirect('/lectures/' + cid)
+    return jsonify(success=True)

@@ -39,8 +39,8 @@
             {% for file in submission.submissionFiles %}
             <a class="list-group-item list-group-item-action" href={{ url_for('downloadSubmission'
             ,id=file.submissionFileId) }}>{{ file.fileName }}</a>
+            {% endfor %}
         </div>
-        {% endfor %}
         {% else %}
         <h5> No Submission Files</h5>
         {% endif %}

@@ -1,6 +1,6 @@
 from Application import app, org
 from Application import models
-from flask import request, render_template, redirect, flash, session, send_file
+from flask import request, render_template, redirect, flash, session, send_file, jsonify
 from Application.decorators.authenticate import authenticate
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -11,22 +11,23 @@ PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 
 
 
 @app.route('/assignments/delete/<id>')
+@authenticate
 def deleteAssignment(id):
     if not id:
-        flash("Assignment id is missing")
-        return redirect('/home')
+        return jsonify(success=False, msg='Assignment id is missing')
     else:
         ass = models.Assignment.query.filter_by(assignmentId=id).one()
-        cid = str(ass.course.courseId)
+        # cid = str(ass.course.courseId)
         models.db.session.delete(ass)
         models.db.session.commit()
-        flash("Successfully Deleted")
+        # flash("Successfully Deleted")
 
-    return redirect('/assignments/' + cid)
+    return jsonify(success=True)
 
 
 # Get list of assignments By Course
 @app.route('/assignments/<id>', methods=['GET'])
+@authenticate
 def getAssignmentsByCourse(id):
     assignments = models.Assignment.query.filter_by(courseId=id).all()
 
@@ -42,8 +43,12 @@ def getAssignmentsByCourse(id):
 
 
 @app.route('/assignments/detail/<id>', methods=['GET'])
+@authenticate
 def getAssignmentDetailById(id):
     assignment = models.Assignment.query.filter_by(assignmentId=id).first()
+    hasDeadlinePassed = False
+    if datetime.today() > assignment.assignmentDeadline:
+        hasDeadlinePassed = True
 
     if not assignment:
         flash('Assignment did not exist')
@@ -51,10 +56,12 @@ def getAssignmentDetailById(id):
 
     isTeacher = session['isTeacher']
 
-    return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher)
+    return render_template('assignment_detail.html', assignment=assignment, isTeacher=isTeacher,
+                           hasDeadlinePassed=hasDeadlinePassed)
 
 
 @app.route('/asssignments/download/<id>', methods=['GET'])
+@authenticate
 def downloadAssignment(id):
     fileId = id
     if not fileId:
@@ -89,7 +96,7 @@ def createAssignment(course_id):
     totalMarks = formData['totalMarks']
 
     print(assignmentName, assignmentDesc, formData["assignmentDeadline"], totalMarks)
-    if assignmentDesc == '' or assignmentName == '' or totalMarks == '':
+    if assignmentDesc == '' or assignmentName == '' or totalMarks == '' or formData["assignmentDeadline"] == '':
         # flash('assignment fields empty')
         return render_template('assignments.html', course_id=course_id,
                                assignments=filteredAssignments,
@@ -97,19 +104,23 @@ def createAssignment(course_id):
                                assignment_name=assignmentName,
                                assignment_desc=assignmentDesc,
                                total_marks=totalMarks,
-                               show_modal=True)
+                               show_modal=True,
+                               isTeacher=session['isTeacher'])
     # We need to include time here as well. When u change it to that: DONE
     try:
         assignmentDeadline = datetime.strptime(formData['assignmentDeadline'], '%Y/%m/%d %H:%M')
+        if datetime.today() >= assignmentDeadline:
+            raise ValueError('Due date must be greater than current time')
     except ValueError:
         # flash('Please enter date time field')
         return render_template('assignments.html', course_id=course_id,
-                               err_msg='Assignment Due Date must not be empty. ',
+                               err_msg='Due date must be greater than current time',
                                assignments=filteredAssignments,
                                assignment_name=assignmentName,
                                assignment_desc=assignmentDesc,
                                total_marks=totalMarks,
-                               show_modal=True)
+                               show_modal=True,
+                               isTeacher=session['isTeacher'])
 
     newAssignment = models.Assignment()
     newAssignment.assignmentDesc = assignmentDesc
@@ -145,7 +156,7 @@ def createAssignment(course_id):
 
     models.db.session.commit()
     flash("Assignment successfully created")
-    return getAssignmentsByCourse(id=course_id)
+    return redirect('/assignments/' + course_id)
 
 
 @app.route('/updateAssignment/<id>', methods=['GET', 'POST'])
