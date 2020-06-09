@@ -7,7 +7,7 @@ import requests
 from markupsafe import escape
 import hashlib
 
-AUTHORIZATION_KEY = 'cAjgefMycsKmJc5qn553oWCUBSkPat35yXVu1pTnEf'
+AUTHORIZATION_KEY = ''
 
 @app.route('/lectures/<courseId>', methods=['GET', 'POST'])
 @authenticate
